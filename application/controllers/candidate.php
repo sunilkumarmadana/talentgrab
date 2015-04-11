@@ -25,10 +25,10 @@ class Candidate extends CI_Controller {
             'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
         );
         
-        $template["head"] = $this->load->view('common/login/head', $head_params, true);
-        $template["header"] = $this->load->view('common/login/header', null, true);
+        $template["head"] = $this->load->view('common/head', $head_params, true);
+        $template["header"] = $this->load->view('common/header_login', null, true);
         $template["contents"] = $this->load->view('candidate/index', null, true);
-        $this->load->view('common/login/layout', $template);
+        $this->load->view('common/layout', $template);
 	}
     
     // Validate and store registration data in database
@@ -46,15 +46,19 @@ class Candidate extends CI_Controller {
                 'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
             );
             
-            $template["head"] = $this->load->view('common/login/head', $head_params, true);
-            $template["header"] = $this->load->view('common/login/header', null, true);
+            $template["head"] = $this->load->view('common/head', $head_params, true);
+            $template["header"] = $this->load->view('common/header_login', null, true);
             $template["contents"] = $this->load->view('candidate/register', null, true);
-            $this->load->view('common/login/layout', $template);
+            $this->load->view('common/layout', $template);
         } else {
             $this->session->set_userdata('emailaddress', $this->input->post('email'));
+            $this->load->model('Grabtalent_signup_model');
+            $code = Grabtalent_signup_model::generate_unique_code();
             $logindata = array(
+                'unique_code' => $code,
                 'email' => $this->input->post('email'),
-                'password' => md5($this->input->post('password'))
+                'password' => md5($this->input->post('password')),
+                'type' => 'candidate'
             );
             $result = $this->login_database->registration_insert($logindata);
             if ($result == TRUE) {
@@ -86,17 +90,20 @@ class Candidate extends CI_Controller {
                 $temp_array = array('username' => $this->input->post('emailaddress'));
                 
                 // Read user data with email address
+                $this->session->set_userdata('logged_in', $temp_array);
                 $result = $this->login_database->read_user_information($temp_array, 'candidate');
+                $this->session->set_userdata('user_data', $result);
+                
                 if($result != false) {
                     
                     $head_params = array(
-                        'title' => 'Job Seeker Portal | Grab Talent',
+                        'title' => 'Candidate Portal | Grab Talent',
                         'description' => "Grab Talent is the best online recruitment portal",
                         'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
                     );
                     
-                    $template["head"] = $this->load->view('common/login/head', $head_params, true);
-                    $template["header"] = $this->load->view('common/login/header', null, true);
+                    $template["head"] = $this->load->view('common/head', $head_params, true);
+                    $template["header"] = $this->load->view('common/header', null, true);
                     $template["contents"] = $this->load->view('candidate/home', null, true);
                     $this->load->view('common/layout', $template);
                 }
@@ -113,7 +120,6 @@ class Candidate extends CI_Controller {
         $sess_array = array('username' => '');
         $this->session->unset_userdata('logged_in', $sess_array);
         $data['message_display'] = 'Successfully Logout';
-        //$this->load->view('candidatelogin/index.php', $data);
         redirect( base_url('candidate') );
     }
     

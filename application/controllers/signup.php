@@ -32,9 +32,9 @@ class Signup extends CI_Controller {
         );
             
         $template["head"] = $this->load->view('common/login/head', $head_params, true);
-        $template["header"] = $this->load->view('common/login/header', null, true);
+        $template["header"] = $this->load->view('common/header_login', null, true);
         $template["contents"] = $this->load->view('candidate/signup', $logindata, true);
-        $this->load->view('common/login/layout', $template);
+        $this->load->view('common/layout', $template);
 	}
     
     // Validate and store registration data in database
@@ -46,12 +46,17 @@ class Signup extends CI_Controller {
         // Check validation for user input in SignUp form
         $this->load->model('grabtalent_signup_model');        
         $SignupModels = $this->_saveSignups(
-            $this->input->post('jobtitle'),
-            $this->input->post('firstname'),
-            $this->input->post('lastname'),
+            $this->input->post('firstName'),
+            $this->input->post('lastName'),
             $email,
-            $this->input->post('industryskills'),
-            $this->input->post('funcexpertise')
+            $this->input->post('phoneNumber'),
+            $this->input->post('jobCategory'),
+            $this->input->post('jobFunction'),
+            $this->input->post('jobIndustry'),
+            $this->input->post('jobSubIndustry'),
+            $this->input->post('currentAnnualSal'),
+            $this->input->post('resStatusinSG'),
+            $this->input->post('jobalertagreement')
         );
         if($this->db->trans_status() == '1') {
             $this->session->set_flashdata('success_message', 'Your account was registered successfully, you may login now!');
@@ -61,7 +66,7 @@ class Signup extends CI_Controller {
         redirect(base_url('candidate'));
     }
     
-    private function _saveSignups($title, $firstname, $lastname, $email, $jobfunction, $jobindustry) {
+    private function _saveSignups($firstname, $lastname, $email, $phone, $jobcategory, $jobfunction, $jobindustry, $jobSubindustry, $currentAnnualSal, $resStatus, $jobAlert) {
 
         $SignupModels = array();
 
@@ -72,16 +77,17 @@ class Signup extends CI_Controller {
         $SignupModel->row['firstname']                          = $firstname;
         $SignupModel->row['lastname']                           = $lastname;
         $SignupModel->row['email']                              = $email;
-        $SignupModel->row['job_category']                       = '';
+        $SignupModel->row['phonenumber']                        = $phone;
+        $SignupModel->row['job_category']                       = $jobcategory;
         $SignupModel->row['job_function']                       = $jobfunction;
         $SignupModel->row['job_industry']                       = $jobindustry;
-        $SignupModel->row['job_sub_industry']                   = '';
-        $SignupModel->row['registration_date']                  = '';
-        $SignupModel->row['current_annual_salary']              = '';
-        $SignupModel->row['current_salary_breakdown']           = '';
-        $SignupModel->row['residential_status_in_singapore']    = '';
-        $SignupModel->row['job_alert_agreement']                = '';
-        $SignupModel->row['title']                              = $title;
+        $SignupModel->row['job_sub_industry']                   = $jobSubindustry;
+        $SignupModel->row['registration_date']                  = date('Y-m-d h:m:s');
+        $SignupModel->row['current_annual_salary']              = $currentAnnualSal;
+        $SignupModel->row['residential_status_in_singapore']    = $resStatus;
+        $SignupModel->row['job_alert_agreement']                = $jobAlert;
+        $SignupModel->row['title']                              = '';
+        $SignupModel->row['created_date']                       = date('Y-m-d h:m:s');
         $SignupModel->save();
         array_push($SignupModels, $SignupModel);
 

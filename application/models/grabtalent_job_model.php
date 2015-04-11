@@ -1,23 +1,29 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Grabtalent_signup_model extends CI_Model {
+class Grabtalent_job_model extends CI_Model {
 
-    const TABLE_NAME = 'grabtalent_signup';
+    const TABLE_NAME = 'job';
 
     var $row = array(
-        'id' => null,
-        'firstname' => null,
-        'lastname' => null,
-        'email' => null,
+        'job_number' => null,
+        'job_title' => null,
+        'min_month_salary' => null,
+        'max_month_salary' => null,
+        'primary_work_location_country' => null,
+        'primary_work_location_city' => null,
+        'currency' => null,
         'job_category' => null,
         'job_function' => null,
         'job_industry' => null,
         'job_sub_industry' => null,
-        'registration_date' => null,
-        'current_annual_salary' => null,
-        'residential_status_in_singapore' => null,
-        'job_alert_agreement' => null,
-        'title' => null,
+        'job_description' => null,
+        'post_date' => null,
+        'post_job' => null,
+        'created_by' => null,
+        'created_date' => null,
+        'view_count' => null,
+        'text_search' => null,
+        'delete_flg' => null,
     );
 
 
@@ -27,14 +33,7 @@ class Grabtalent_signup_model extends CI_Model {
 
     // save to Database
     function save() {
-        if ($this->row['id']) {
-            // update
-            $this->db->update(self::TABLE_NAME, $this->row, array('id' => $this->row['id']));
-        } else {
-            // new
-            $this->db->insert(self::TABLE_NAME, $this->row);
-            $this->row['id'] = $this->db->insert_id();
-        }
+        $this->db->insert(self::TABLE_NAME, $this->row);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 

@@ -14,6 +14,7 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">Jobs</a></li>
                         <li><a href="#">Settings</a></li>
                         <li><a href="#">Profile</a></li>
                         <li><a href="/candidate">Logout</a></li>
@@ -25,39 +26,36 @@
     </div>
 </div>
 <div class="site-wrapper">
+    <?php
+        $sess_data = $this->session->userdata('user_data');
+    ?>
     <div class="site-wrapper-inner">
         <div class="container">
             <!-- First Row - Start -->
             <div class="row">
                 <div class="col-md-6">
+                    <?php foreach($sess_data as $usrdt){ ?>
                     <table class="table borderless">
                         <tbody>
                             <tr>
-                                <td><b>Salutation:</b></td>
-                                <td>Mr.</td>
-                            </tr>
-                            <tr>
                                 <td><b>Name:</b></td>
-                                <td><?php echo $firstname; ?></td>
+                                <td><?php echo $usrdt['firstname']." ".$usrdt['lastname'];?></td>
                             </tr>
                             <tr>
-                                <td><b>Contact Details:</b></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td class="td-spacer"><b>Phone:</b></td>
-                                <td></td>
-                            </tr>                                
-                            <tr>
-                                <td class="td-spacer"><b>Mobile:</b></td>
-                                <td></td>
+                                <td><b>Phone Number:</b></td>
+                                <td><?php echo $usrdt['phonenumber'];?></td>
                             </tr>
                             <tr>
                                 <td><b>Email:</b></td>
-                                <td><?php echo $email; ?></td>
+                                <td><?php echo $usrdt['email'];?></td>
+                            </tr>
+                            <tr>
+                                <td><b>Residential Status:</b></td>
+                                <td><?php echo $usrdt['residential_status_in_singapore'];?></td>
                             </tr>
                         </tbody>
                     </table>
+                    <?php } ?>
                 </div>
                 <div class="col-md-6">
                     <!-- Carousel======== -->
@@ -99,22 +97,18 @@
                                 <th>Rating (Out of 5)</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                            </tr>
+                        <tbody> 
+                            <?php 
+                                $skills = $usrdt['job_function'];
+                                $sklary = explode(",", $skills);
+                                foreach($sklary as $key => $val) {
+                                    echo "<tr>";
+                                    echo "<td>".$sklary[$key]."</td>";
+                                    echo "<td></td>";
+                                    echo "<td></td>";
+                                    echo "</tr>";
+                                } 
+                            ?>
                         </tbody>
                     </table>
                 </div>

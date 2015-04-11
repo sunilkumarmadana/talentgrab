@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 Class Login_Database extends CI_Model {
 
@@ -71,18 +71,42 @@ Class Login_Database extends CI_Model {
             $this->db->limit(1);
             $query = $this->db->get();
             if ($query->num_rows() == 1) {
-                return $query->result();
+                return $query->result_array();
             } else {
                 return false;
             }
                 
         } else if($type == 'employer'){
             
+            $condition = "email =" . "'" . $sess_array['username'] . "'";
+            $this->db->select('*');
+            $this->db->from('grabtalent_employers');
+            $this->db->where($condition);
+            $this->db->limit(1);
+            $query = $this->db->get();
+            if ($query->num_rows() == 1) {
+                return $query->result_array();
+            } else {
+                return false;
+            }
+            
         }
+    } 
+    
+    // Read data from database to show data in admin page
+    public function read_job_information($data) {
         
-        
-        
-    }    
+        $condition = "created_by =" . "'" . $data['username'] . "'";
+        $this->db->select('*');
+        $this->db->from('job');
+        $this->db->where($condition);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return false;
+        }
+    }   
 }
 
 ?>

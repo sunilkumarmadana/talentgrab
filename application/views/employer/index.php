@@ -18,7 +18,7 @@ $(function(){
                             echo "</div>";
                         }
                     ?>
-                    <form action="<?php echo "/employer/employer_login_process"?>" method="post" accept-charset="utf-8" role="form">                            
+                    <form action="<?php echo "/employer/employer_login"?>" method="post" accept-charset="utf-8" role="form">                            
                         <label for="name" class="sr-only">Username</label>
                         <input type="text" class="form-control" name="username" id="name" placeholder="username" required autofocus/><br />
                         <label for="inputPassword" class="sr-only">Password</label>
