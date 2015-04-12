@@ -36,6 +36,10 @@ define('FOPEN_READ_WRITE_CREATE',				'a+b');
 define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
+define('PUBLIC_FOLDER', '../public/');
+
+define('RESUME_FILEUPLOAD_SIZE_MAX', 2097152); // Byte
+
 define('RGF_MAIL_FROM', 'sunil.madana.kumar@ricemerchant.com');
 define('RGF_MAIL_TO', 'sunil.madana.kumar@gmail.com');
 define('RGF_EMP_MAIL_TO', 'sunil.madana.kumar@gmail.com');

@@ -24,6 +24,7 @@ class Grabtalent_job_model extends CI_Model {
         'view_count' => null,
         'text_search' => null,
         'delete_flg' => null,
+        'video_url' => null,
     );
 
 

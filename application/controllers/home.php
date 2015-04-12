@@ -13,7 +13,6 @@ class Home extends CI_Controller {
         $template["head"] = $this->load->view('common/head', $head_params, true);
         $template["header"] = $this->load->view('common/header', null, true);
         $template["contents"] = $this->load->view('home/index', null, true);
-        //$template["footer"] = $this->load->view('common/footer', null, true);
         $this->load->view('common/layout', $template);
 	}
 }

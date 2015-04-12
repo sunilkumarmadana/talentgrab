@@ -20,16 +20,13 @@
                             } else {
                                 echo '<li><a href="/">Home</a></li>';
                             }
-                        ?>                        
-                        <?php
+                                                        
                             if( $this->uri->segment(1) == 'aboutus'){
                                 echo '<li class="active"><a href="/aboutus">About</a></li>';
                             } else {
                                 echo '<li><a href="/aboutus">About</a></li>';
                             }
-                        ?>
-                        
-                        <?php
+                                                        
                             if( $this->uri->segment(1) == 'contact'){
                                 echo '<li class="active"><a href="/contact">Contact</a></li>';
                             } else {
@@ -38,7 +35,7 @@
                         ?>                        
                     </ul>
                     <div class="navbar-form navbar-right">
-                        <a href="/employer" class="btn btn-warning">Employers</a>
+                        <a href="/recruiter" class="btn btn-warning">Recruiter</a>
                         <a href="/candidate" class="btn btn-primary">Job Seeker</a>
                     </div>
                 </div>

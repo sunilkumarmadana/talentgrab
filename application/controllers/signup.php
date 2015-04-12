@@ -31,8 +31,8 @@ class Signup extends CI_Controller {
             'password' => md5($this->input->post('password'))
         );
             
-        $template["head"] = $this->load->view('common/login/head', $head_params, true);
-        $template["header"] = $this->load->view('common/header_login', null, true);
+        $template["head"] = $this->load->view('common/head', $head_params, true);
+        $template["header"] = $this->load->view('common/header', null, true);
         $template["contents"] = $this->load->view('candidate/signup', $logindata, true);
         $this->load->view('common/layout', $template);
 	}

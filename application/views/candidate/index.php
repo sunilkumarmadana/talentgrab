@@ -23,14 +23,20 @@ $(function(){
                                 echo $error_message;
                             echo "</div>";
                         }
+                        
+                        if (isset($message_display) && $message_display != "") {
+                            echo "<div class='alert alert-danger' role='alert'>";
+                                echo $message_display;
+                            echo "</div>";
+                        }
                     ?>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
                     <h2>Job Seeker Portal</h2>
-                    <form action="<?php echo "/candidate/user_login"?>" method="post" accept-charset="utf-8" role="form">                            
-                        <label for="name" class="sr-only">Username</label>
+                    <form action="<?php echo "/candidate/candidate_login"?>" method="post" accept-charset="utf-8" role="form">                            
+                        <label for="name" class="sr-only">Email Address</label>
                         <input type="text" class="form-control" name="emailaddress" id="emailaddress" placeholder="Email Address" required autofocus/><br />
                         <label for="inputPassword" class="sr-only">Password</label>
                         <input type="password" id="password" name="password" class="form-control" placeholder="Password" required><br />
