@@ -16,27 +16,27 @@
                     <ul class="nav navbar-nav">
                         <?php
                             if( ($this->uri->segment(1) != 'contact') && ($this->uri->segment(1) != 'aboutus') ) {
-                                echo '<li class="active"><a href="/">Home</a></li>';
+                                echo '<li class="active"><a href="'.http_url("/").'">Home</a></li>';
                             } else {
-                                echo '<li><a href="/">Home</a></li>';
+                                echo '<li><a href="'.http_url("/").'">Home</a></li>';
                             }
                                                         
                             if( $this->uri->segment(1) == 'aboutus'){
-                                echo '<li class="active"><a href="/aboutus">About</a></li>';
+                                echo '<li class="active"><a href="'.http_url("/aboutus").'">About</a></li>';
                             } else {
-                                echo '<li><a href="/aboutus">About</a></li>';
+                                echo '<li><a href="'.http_url("/aboutus").'">About</a></li>';
                             }
                                                         
                             if( $this->uri->segment(1) == 'contact'){
-                                echo '<li class="active"><a href="/contact">Contact</a></li>';
+                                echo '<li class="active"><a href="'.http_url("/contact").'">Contact</a></li>';
                             } else {
-                                echo '<li><a href="/contact">Contact</a></li>';
+                                echo '<li><a href="'.http_url("/contact").'">Contact</a></li>';
                             }
                         ?>                        
                     </ul>
                     <div class="navbar-form navbar-right">
-                        <a href="/recruiter" class="btn btn-warning">Recruiter</a>
-                        <a href="/candidate" class="btn btn-primary">Job Seeker</a>
+                        <a href="<?php echo https_url('/recruiter'); ?>" class="btn btn-warning">Recruiter</a>
+                        <a href="<?php echo https_url('/candidate'); ?>" class="btn btn-primary">Job Seeker</a>
                     </div>
                 </div>
             </div>

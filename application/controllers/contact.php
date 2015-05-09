@@ -1,10 +1,16 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Contact extends CI_Controller {
+    
+    public function __construct() {
+        parent::__construct();
+        $this->load->helper('view_helper');
+        
+        $this->load->library('form_validation');
+    }
        
     public function index() {
-
-        $this->load->library('form_validation');
+        
         $this->form_validation->set_rules('firstname',   'First Name',         'trim|required|max_length[50]|xss_clean');
         $this->form_validation->set_rules('lastname',    'Last Name',          'trim|required|max_length[50]|xss_clean');
         $this->form_validation->set_rules('email',       'Email',              'trim|required|max_length[255]|valid_email|xss_clean');

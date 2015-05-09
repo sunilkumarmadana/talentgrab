@@ -1,5 +1,5 @@
-<div class="site-wrapper">
-    <div class="site-wrapper-inner">
+<div class="aboutus-wrapper">
+    <div class="aboutus-wrapper-inner">
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">

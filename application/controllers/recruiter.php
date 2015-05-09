@@ -7,7 +7,9 @@ class Recruiter extends CI_Controller {
 
         // Load form helper library
         $this->load->helper(array('form', 'url'));
-        
+                
+        $this->load->helper('view_helper');
+                
         // Load form validation library
         $this->load->library('form_validation');
         
@@ -16,11 +18,20 @@ class Recruiter extends CI_Controller {
         
         // Load database
         $this->load->model('login_database');
+        
+        if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") {
+            $url = "https://". $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+            redirect($url);
+            exit;
+        }
                 
     }
     
     // Employer Portal login page with user-email and password.
 	public function index() {
+        $session_items = array('job_detail' => '', 'logged_in' => '');
+        $this->session->unset_userdata($session_items);
+        
         $head_params = array(
             'title' => 'Employer Portal | Grab Talent',
             'description' => "Grab Talent is the best online recruitment portal",
@@ -51,7 +62,7 @@ class Recruiter extends CI_Controller {
             if($result == TRUE){                                
                 // Add user data in session
                 $this->session->set_userdata('logged_in', $this->input->post('emailaddress'));                                
-                redirect( base_url('recruiter_dashboard') );                
+                redirect( base_url('recruiter_dashboard') );
             } else {
                 $this->session->set_flashdata('error_message', 'Invalid Email Address or Password');
                 redirect( base_url('recruiter') );
@@ -107,9 +118,13 @@ class Recruiter extends CI_Controller {
         // Check validation for user input in SignUp form
         $this->load->model('grabtalent_job_model');
         
-        $filename  = $_FILES['userfile']['name'];
-        $fileext = explode(".", $filename);
-        $video_name = preg_replace("/[[:space:]]+/", "_", htmlspecialchars( $this->input->post('inputJobTitle') ) ) . "_" . date('Ymdhms').".".$fileext[1];                
+        if(!file_exists($_FILES['userfile']['name']) || !is_uploaded_file($_FILES['userfile']['name'])) {
+            $video_name = '';
+        } else {
+            $filename  = $_FILES['userfile']['name'];
+            $fileext = explode(".", $filename);
+            $video_name = preg_replace("/[[:space:]]+/", "_", htmlspecialchars( $this->input->post('inputJobTitle') ) ) . "_" . date('Ymdhms').".".$fileext[1];    
+        }       
                 
         $JobModels = $this->_saveJobs(
             $this->input->post('inputJobTitle'),
@@ -140,10 +155,6 @@ class Recruiter extends CI_Controller {
     // Logout from admin page
     public function logout() {    
         // Removing session data
-        $sess_array = array('username' => '');
-        $this->session->unset_userdata('logged_in', $sess_array);
-        $data['message_display'] = 'Successfully Logout';
-        $this->session->sess_destroy();
         redirect( base_url('recruiter') );
     }
     
@@ -187,7 +198,7 @@ class Recruiter extends CI_Controller {
     public function _do_upload($flname) {
         
         $config['upload_path'] = 'public/recruiter/';
-		$config['allowed_types'] = 'mp4';
+		$config['allowed_types'] = 'mp4|mov';
 		$config['max_size']	= '2048';
         $config['file_name'] = $flname;
 
@@ -196,9 +207,52 @@ class Recruiter extends CI_Controller {
 		if ( ! $this->upload->do_upload()) {
             $this->session->set_flashdata('error_message', $this->upload->display_errors());
 		} else {
-            $this->session->set_flashdata('success_message', $this->upload->data());
+            $this->session->set_flashdata('success_message', 'All Data has been uploaded successfully!!');
 		}
 	}
+    
+    // Load Forgot Password Page
+    public function forgotpassword() {
+        
+        $head_params = array(
+            'title' => 'Recruiter Forgot Password | Grab Talent',
+            'description' => "Grab Talent is the best online recruitment portal",
+            'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
+        );
+        $template["head"] = $this->load->view('common/head', $head_params, true);
+        $template["header"] = $this->load->view('common/header', null, true);
+        $template["contents"] = $this->load->view('recruiter/forgotpassword', null, true);
+        $this->load->view('common/layout', $template);
+    }
+    
+    // Send forgot password link to recruiter.    
+    public function sendforgotpwd() {
+        
+        $config = array(
+            'protocol' => 'smtp',
+            'smtp_host' => 'ssl://ns3-999.999servers.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'sunil.madana.kumar@ricemerchant.com', // change it to yours
+            'smtp_pass' => 'Sunil2012Swathi', // change it to yours
+            'mailtype' => 'html',
+            'charset'=>'utf-8',
+            'wordwrap' => TRUE            
+        );
+        $message = $this->load->view('common/forgotpass','',true);
+        $this->load->library('email', $config);
+        $this->email->set_newline("\r\n");
+        $this->email->from('sunil.madana.kumar@ricemerchant.com','Grab Talent'); // change it to yours
+        $this->email->to($this->input->post("email"));// change it to yours
+        $this->email->subject('GrabTalent : Reset Password');
+        $this->email->message($message);
+        if($this->email->send()) {
+            redirect( base_url('recruiter') );
+            $this->session->set_flashdata('success_message', 'Please check your email! We have sent you a reset password link.');
+        } else {
+            //show_error($this->email->print_debugger());
+            $this->session->set_flashdata('error_message', 'Something went wrong. Please try again later!');
+        }
+    }
     
 }
 

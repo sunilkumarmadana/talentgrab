@@ -17,7 +17,8 @@
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="/js/jquery-1.11.2.js"></script>
     <script src="/js/ie-emulation-modes-warning.js"></script>    
-    <script src="/js/bootstrap.js"></script>
+    <!-- <script src="/js/bootstrap.js"></script> -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="/js/jquery.steps.js"></script>
     <script src="/js/jquery.validate_1.13.1.js"></script>
 

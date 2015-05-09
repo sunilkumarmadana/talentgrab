@@ -18,11 +18,12 @@ $(function(){
                         }
                     ?>
                     <h2>Recruiter Portal</h2>
-                    <form action="<?php echo "/recruiter/recruiter_login"?>" method="post" accept-charset="utf-8" role="form">                            
+                    <form action="<?php echo https_url("/recruiter/recruiter_login"); ?>" method="post" accept-charset="utf-8" role="form">                            
                         <label for="emailaddress" class="sr-only">Email Address</label>
-                        <input type="text" class="form-control" name="emailaddress" id="emailaddress" placeholder="Email Address" required autofocus/><br />
+                        <input type="text" class="form-control" name="emailaddress" id="emailaddress" placeholder="Email Address" required /><br />
                         <label for="inputPassword" class="sr-only">Password</label>
                         <input type="password" id="password" name="password" class="form-control" placeholder="Password" required><br />
+                        <a href="<?php echo https_url("/recruiter/forgotpassword"); ?>" target="_parent">Forgot Password?</a><br /><br />
                         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
                     </form>                                
                 </div>

@@ -34,7 +34,8 @@ $(function(){
                             <label for="inputVideoResume" class="col-sm-2 control-label">Video Introduction</label>
                             <div class="col-sm-10">
                                 <input type="file" name="userfile" size="20" />
-                                <p class="help-block">Supported formats: .mp4 (max. file size 2MB)<br />(width=560px, height=320px)</p>
+                                <camera id='grab' data-app-id='a-9b2579c0-d32a-0132-3490-12313d286eb7'></camera>
+                                <p class="help-block">Supported formats: .mp4, .mov (max. file size 2MB)<br />(width=560px, height=320px)</p>
                             </div>
                         </div>
                         <div class="form-group">
@@ -46,13 +47,13 @@ $(function(){
                         <div class="form-group">
                             <label for="inputJobMinSalary" class="col-sm-2 control-label">Min. Monthly Salary</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputJobMinSalary" name="inputJobMinSalary" placeholder="Min. Monthly Salary" required>
+                                <input type="number" class="form-control" id="inputJobMinSalary" name="inputJobMinSalary" placeholder="Min. Monthly Salary" required>
                             </div>
                         </div><br />
                         <div class="form-group">
                             <label for="inputJobMaxSalary" class="col-sm-2 control-label">Max. Monthly Salary</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputJobMaxSalary" name="inputJobMaxSalary" placeholder="Max. Monthly Salary" required>
+                                <input type="number" class="form-control" id="inputJobMaxSalary" name="inputJobMaxSalary" placeholder="Max. Monthly Salary" required>
                             </div>
                         </div><br />
                         <div class="form-group">

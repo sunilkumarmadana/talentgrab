@@ -2,11 +2,13 @@
 
 class Recruiter_dashboard extends CI_Controller {
 
-    public function __construct() {
-        parent::__construct();
-
+    // Employer Portal login page with user-email and password.
+	public function index() {
+        
         // Load form helper library
         $this->load->helper('form');
+        
+        $this->load->helper('view_helper');
         
         // Load form validation library
         $this->load->library('form_validation');
@@ -17,10 +19,12 @@ class Recruiter_dashboard extends CI_Controller {
         // Load database
         $this->load->model('login_database');
         
-    }
-    
-    // Employer Portal login page with user-email and password.
-	public function index() {        
+        if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") {
+            $url = "https://". $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+            redirect($url);
+            exit;
+        }
+        
         $head_params = array(
             'title' => 'Employer Portal | Grab Talent',
             'description' => "Grab Talent is the best online recruitment portal",
@@ -35,10 +39,6 @@ class Recruiter_dashboard extends CI_Controller {
     // Logout from admin page
     public function logout() {    
         // Removing session data
-        $sess_array = array('username' => '');
-        $this->session->unset_userdata('logged_in', $sess_array);
-        $data['message_display'] = 'Successfully Logout';
-        $this->session->sess_destroy();
         redirect( base_url('recruiter') );
     }
         

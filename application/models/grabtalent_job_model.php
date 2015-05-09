@@ -2,7 +2,7 @@
 
 class Grabtalent_job_model extends CI_Model {
 
-    const TABLE_NAME = 'job';
+    const TABLE_NAME = 'jobs';
 
     var $row = array(
         'job_number' => null,

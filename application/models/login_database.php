@@ -2,20 +2,33 @@
 
 Class Login_Database extends CI_Model {
 
+    // Fetch Candidate Reference Id
+    public function fetch_cand_refId($data) {
+    
+        // Query to check whether username already exist or not
+        $condition = "candidate_email =" . "'" . $data['email'] . "'";
+        $this->db->select('*');
+        $this->db->from('candidate_login');
+        $this->db->where($condition);
+        $query = $this->db->get();
+        foreach ($query->result_array() as $row) {
+            return $row['candidate_ref_id'];
+        }
+    }
+    
     // Insert registration data in database
     public function registration_insert($data) {
     
         // Query to check whether username already exist or not
-        $condition = "email =" . "'" . $data['email'] . "'";
+        $condition = "candidate_email =" . "'" . $data['candidate_email'] . "'";
         $this->db->select('*');
-        $this->db->from('login_users');
+        $this->db->from('candidate_login');
         $this->db->where($condition);
-        $this->db->limit(1);
         $query = $this->db->get();
         if ($query->num_rows() == 0) {
         
             // Query to insert data in database
-            $this->db->insert('login_users', $data);
+            $this->db->insert('candidate_login', $data);
             if ($this->db->affected_rows() > 0) {
                 return true;
             }
@@ -28,9 +41,9 @@ Class Login_Database extends CI_Model {
     // Read data using username and password
     public function candidatelogin($data) {
     
-        $condition = "email =" . "'" . $data['emailaddress'] . "' AND " . "password =" . "'" . md5($data['password']) . "'";
+        $condition = "candidate_email =" . "'" . $data['emailaddress'] . "' AND " . "candidate_password =" . "'" . md5($data['password']) . "'";
         $this->db->select('*');
-        $this->db->from('login_users');
+        $this->db->from('candidate_login');
         $this->db->where($condition);
         $this->db->limit(1);
         $query = $this->db->get();
@@ -46,9 +59,9 @@ Class Login_Database extends CI_Model {
     // Read data using username and password
     public function employerlogin($data) {
     
-        $condition = "email =" . "'" . $data['username'] . "' AND " . "password =" . "'" . md5($data['password']) . "'";
+        $condition = "employer_email =" . "'" . $data['username'] . "' AND " . "employer_password =" . "'" . md5($data['password']) . "'";
         $this->db->select('*');
-        $this->db->from('login_users');
+        $this->db->from('employer_login');
         $this->db->where($condition);
         $this->db->limit(1);
         $query = $this->db->get();
@@ -64,9 +77,9 @@ Class Login_Database extends CI_Model {
     public function read_user_information($sess_array, $type) {
         if($type == 'candidate') {
             
-            $condition = "email =" . "'" . $sess_array['username'] . "'";
+            $condition = "candidate_email =" . "'" . $sess_array['username'] . "'";
             $this->db->select('*');
-            $this->db->from('grabtalent_signup');
+            $this->db->from('candidate_signup');
             $this->db->where($condition);
             $this->db->limit(1);
             $query = $this->db->get();
@@ -78,9 +91,9 @@ Class Login_Database extends CI_Model {
                 
         } else if($type == 'employer') {
             
-            $condition = "email =" . "'" . $sess_array['username'] . "'";
+            $condition = "employer_email =" . "'" . $sess_array['username'] . "'";
             $this->db->select('*');
-            $this->db->from('grabtalent_employers');
+            $this->db->from('employers');
             $this->db->where($condition);
             $this->db->limit(1);
             $query = $this->db->get();
@@ -96,9 +109,9 @@ Class Login_Database extends CI_Model {
     // Read data from database to show data in admin page
     public function job_dashboard($sess_array) {
         
-        $condition = "created_by =" . "'" . $sess_array['username'] . "' and post_job = 'on'";
+        $condition = "created_by =" . "'" . $sess_array['username'] . "'";
         $this->db->select('*');
-        $this->db->from('job');
+        $this->db->from('jobs');
         $this->db->where($condition);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
@@ -106,14 +119,29 @@ Class Login_Database extends CI_Model {
         } else {
             return false;
         }
-    } 
+    }
+    
+    // Posted jobs for Candidate
+    public function candidate_job_dashboard() {
+        
+        $condition = "post_job = 'on'";
+        $this->db->select('*');
+        $this->db->from('jobs');
+        $this->db->where($condition);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return false;
+        }
+    }  
     
     // Read data from database to show data in admin page
     public function read_job_information($data) {
         
         $condition = "job_number =" . "'" . $data . "'";
         $this->db->select('*');
-        $this->db->from('job');
+        $this->db->from('jobs');
         $this->db->where($condition);
         $this->db->limit(1);
         $query = $this->db->get();
@@ -122,7 +150,22 @@ Class Login_Database extends CI_Model {
         } else {
             return false;
         }
-    }   
+    }
+    
+    // Check forgot password email.
+    public function forgot_passwdemailchk($sess_array) {
+        
+        $condition = "candidate_email =" . "'" . $sess_array . "'";
+        $this->db->select('*');
+        $this->db->from('candidate_login');
+        $this->db->where($condition);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
 }
 
 ?>

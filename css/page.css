@@ -1,13 +1,21 @@
 /** Globals */
 html, body {
-  height: 100%;
+    height: 100%;
+    -ms-word-break: break-all; 
+    word-break: break-all; 
+    word-break: break-word; /* old webkit */ 
 }
+
 
 .borderless tbody tr td, .borderless tbody tr th, .borderless thead tr th {
     border: none;
 }
 
 .td-spacer { padding-left: 35px !important; }
+
+input.error { background-color: #fbe3e4; border:1.5px solid #f00;}
+
+select.error { background-color: #fbe3e4; border:1.5px solid #f00;}
 
 /** Cover */
 .cover { padding: 0 20px; }
@@ -74,6 +82,17 @@ html, body {
     min-height: 100%;
 }
 .site-wrapper-inner {
+  display: table-cell;
+  vertical-align: top;
+}
+
+.aboutus-wrapper {
+    display: table;
+    width: 100%;
+    height: 100%; /* For at least Firefox */
+    min-height: 100%;
+}
+.aboutus-wrapper-inner {
   display: table-cell;
   vertical-align: top;
 }
@@ -156,7 +175,7 @@ a:hover {
 .wizard>.steps .error a,.wizard>.steps .error a:hover,.wizard>.steps .error a:active{background:#ff3111;color:#fff}
 .wizard>.content{background:#eee;display:block;margin:.5em;min-height:45em;overflow:hidden;position:relative;width:auto;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px}
 .wizard.vertical>.content{display:inline;float:left;margin:0 2.5% .5em 2.5%;width:65%}
-.wizard>.content>.body{float:left;position:absolute;width:95%;height:95%;padding:2.5%}
+.wizard>.content>.body{float:left;position:absolute;width:100%;height:95%;padding:2.5%}
 .wizard>.content>.body ul{list-style:disc!important}
 .wizard>.content>.body ul>li{display:list-item}
 .wizard>.content>.body>iframe{border:0 none;width:100%;height:100%}
@@ -164,7 +183,7 @@ a:hover {
 .wizard>.content>.body input[type="checkbox"]{display:inline-block}
 .wizard>.content>.body input.error{background:#fbe3e4;border:1px solid #fbc2c4;color:#8a1f11}
 .wizard>.content>.body label{display:inline-block;margin-bottom:.5em}
-.wizard>.content>.body label.error{color:#8a1f11;display:inline-block;margin-left:1.5em}
+.wizard>.content>.body label.error{color:#8a1f11;display:inline-block; float: right; position:relative; }
 .wizard>.actions{position:relative;display:block;text-align:right;width:100%}
 .wizard.vertical>.actions{display:inline;float:right;margin:0 2.5%;width:95%}
 .wizard>.actions>ul{display:inline-block;text-align:right}
@@ -202,11 +221,29 @@ ol.linenums li{padding-left:12px;color:#bebec5;line-height:20px;text-shadow:0 1p
 
 /* Mobile Displays: 320px – 480px */
 @media only screen and (min-width: 20em) { 
+    .homepage-wrapper {
+        background-image: url('../images/banner2_phone.jpg');
+        background-size: cover;
+        display: table;
+        width: 100%;
+        height: 100%; /* For at least Firefox */
+        min-height: 100%;
+        -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+        box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+    }
+    
     /* Start the vertical centering */
     .site-wrapper-inner {
         vertical-align: top;
-        padding-top: 6%;
+        padding-top: 15%;
     }
+    
+    /* About Us Page */
+    .aboutus-wrapper {
+        vertical-align: top;
+        padding-top: 15%;
+    }
+    
     /* Handle the widths */
     .cover-container {
         width: 100%; /* Must be percentage or pixels for horizontal alignment */
@@ -222,8 +259,12 @@ ol.linenums li{padding-left:12px;color:#bebec5;line-height:20px;text-shadow:0 1p
         width:100%;
     }
     
+}
+
+/* Mobile & Screen Displays: 480px – 768px */
+@media only screen and (min-width: 30em) { 
     .homepage-wrapper {
-        background-image: url('../images/banner2_phone.jpg');
+        background-image: url('../images/banner2_tablet.jpg');
         background-size: cover;
         display: table;
         width: 100%;
@@ -232,15 +273,19 @@ ol.linenums li{padding-left:12px;color:#bebec5;line-height:20px;text-shadow:0 1p
         -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
         box-shadow: inset 0 0 100px rgba(0,0,0,.5);
     }
-}
-
-/* Mobile & Screen Displays: 480px – 768px */
-@media only screen and (min-width: 30em) { 
+    
     /* Start the vertical centering */
     .site-wrapper-inner {
         vertical-align: top;
-        padding-top: 6%;    
+        padding-top: 10%;    
     }
+    
+    /* About Us Page */
+    .aboutus-wrapper {
+        vertical-align: top;
+        padding-top: 10%;
+    }
+    
     /* Handle the widths */
     .cover-container {
         width: 100%; /* Must be percentage or pixels for horizontal alignment */
@@ -254,16 +299,6 @@ ol.linenums li{padding-left:12px;color:#bebec5;line-height:20px;text-shadow:0 1p
         width:25%;
     }
     
-    .homepage-wrapper {
-        background-image: url('../images/banner2_tablet.jpg');
-        background-size: cover;
-        display: table;
-        width: 100%;
-        height: 100%; /* For at least Firefox */
-        min-height: 100%;
-        -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
-        box-shadow: inset 0 0 100px rgba(0,0,0,.5);
-    }
 }
 
 /* Mobile & Bigger Screen Displays: 768px – 1279px */
@@ -278,6 +313,17 @@ ol.linenums li{padding-left:12px;color:#bebec5;line-height:20px;text-shadow:0 1p
         min-height: 100%;
         -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
         box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+    }
+    /* Start the vertical centering */
+    .site-wrapper-inner {
+        vertical-align: top;
+        padding-top: 6%;    
+    }
+    
+    /* About Us Page */
+    .aboutus-wrapper {
+        vertical-align: top;
+        padding-top: 6%;
     }
 }
 

@@ -1,6 +1,11 @@
-Allow from all
+# disable directory browsing
+Options -Indexes
 
 RewriteEngine on
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /index.php/$1 [QSA,PT,L]
+
+# prevent access to .svn folders
+RewriteRule ^(.*/)?\.svn/ - [F,L]
+ErrorDocument 403 ":-)
+
+RewriteCond $1 !^(index\.php|images|css|js|user_guide)
+RewriteRule ^(.*)$ index.php/$1 [L]

@@ -2,22 +2,27 @@
 
 class Grabtalent_signup_model extends CI_Model {
 
-    const TABLE_NAME = 'grabtalent_signup';
+    const TABLE_NAME = 'candidate_signup';
 
     var $row = array(
-        'id' => null,
-        'firstname' => null,
-        'lastname' => null,
-        'email' => null,
-        'job_category' => null,
-        'job_function' => null,
-        'job_industry' => null,
-        'job_sub_industry' => null,
-        'registration_date' => null,
-        'current_annual_salary' => null,
-        'residential_status_in_singapore' => null,
+        'candidate_ref_id' => null,
+        'candidate_firstname' => null,
+        'candidate_lastname' => null,
+        'candidate_email' => null,
+        'candidate_phonecountrycode' => null,
+        'candidate_phonenumber' => null,
+        'candidate_gender' => null,
+        'candidate_nationality' => null,
+        'brief_description' => null,
+        'candidate_skills' => null,
+        'candidate_total_experience' => null,
+        'candidate_exp_annualsalcode' => null,
+        'candidate_exp_annualsalary' => null,
         'job_alert_agreement' => null,
-        'title' => null,
+        'registration_date' => null,
+        'created_date' => null,
+        'resume_url' => null,
+        'video_resume_url' => null,
     );
 
 
@@ -27,14 +32,7 @@ class Grabtalent_signup_model extends CI_Model {
 
     // save to Database
     function save() {
-        if ($this->row['id']) {
-            // update
-            $this->db->update(self::TABLE_NAME, $this->row, array('id' => $this->row['id']));
-        } else {
-            // new
-            $this->db->insert(self::TABLE_NAME, $this->row);
-            $this->row['id'] = $this->db->insert_id();
-        }
+        $this->db->insert(self::TABLE_NAME, $this->row);
         return ($this->db->affected_rows() != 1) ? false : true;
     }
 

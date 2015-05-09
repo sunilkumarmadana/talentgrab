@@ -2,19 +2,12 @@
 
 class Grabtalent_application_model extends CI_Model {
 
-    const TABLE_NAME = 'grabtalent_application';
+    const TABLE_NAME = 'candidate_application';
 
     var $row = array(
-        'job_id' => null,
-        'email' => null,
-        //'firstname' => null,
-        //'lastname' => null,        
-        //'phonenumber' => null,
-        //'location' => null,
-        //'visa_status' => null,
-        //'salary' => null,
-        //'resume_url' => null,
-        'created_date' => null
+        'candidate_appln_job_id' => null,
+        'candidate_email' => null,
+        'candidate_applied_date' => null
     );
 
 
