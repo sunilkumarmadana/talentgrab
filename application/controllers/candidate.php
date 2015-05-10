@@ -15,6 +15,10 @@ class Candidate extends CI_Controller {
         
         // Load session library
         $this->load->library('session');
+        $this->load->helper('language');        
+        $this->load->helper('url');
+        
+        $this->lang->load('common');
         
         // Load database
         $this->load->model('login_database');

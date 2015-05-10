@@ -63,10 +63,8 @@ Class Login_Database extends CI_Model {
         $this->db->select('*');
         $this->db->from('employer_login');
         $this->db->where($condition);
-        $this->db->limit(1);
-        $query = $this->db->get();
-        
-        if ($query->num_rows() == 1) {
+        $query = $this->db->get();        
+        if ($query->num_rows() > 0) {
             return true;
         } else {
             return false;
@@ -81,9 +79,8 @@ Class Login_Database extends CI_Model {
             $this->db->select('*');
             $this->db->from('candidate_signup');
             $this->db->where($condition);
-            $this->db->limit(1);
             $query = $this->db->get();
-            if ($query->num_rows() == 1) {
+            if ($query->num_rows() > 0) {
                 return $query->result_array();
             } else {
                 return false;
@@ -91,13 +88,12 @@ Class Login_Database extends CI_Model {
                 
         } else if($type == 'employer') {
             
-            $condition = "employer_email =" . "'" . $sess_array['username'] . "'";
+            $condition = "employer_contact_email =" . "'" . $sess_array['username'] . "'";
             $this->db->select('*');
             $this->db->from('employers');
             $this->db->where($condition);
-            $this->db->limit(1);
             $query = $this->db->get();
-            if ($query->num_rows() == 1) {
+            if ($query->num_rows() > 0) {
                 return $query->result_array();
             } else {
                 return false;
@@ -158,6 +154,21 @@ Class Login_Database extends CI_Model {
         $condition = "candidate_email =" . "'" . $sess_array . "'";
         $this->db->select('*');
         $this->db->from('candidate_login');
+        $this->db->where($condition);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+    
+    // Check forgot password email.
+    public function forgot_emppasswdemailchk($sess_array) {
+        
+        $condition = "employer_email =" . "'" . $sess_array . "'";
+        $this->db->select('*');
+        $this->db->from('employer_login');
         $this->db->where($condition);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {

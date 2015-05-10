@@ -10,7 +10,8 @@ $(function(){
                 <div class="col-md-12 col-md-offset-0">
                     <div class="error_msg">
                         <?php 
-                            echo validation_errors();
+                            //echo validation_errors();
+                            //print_r($this->session->all_userdata());
                             $success_message = $this->session->flashdata('success_message');
                             if (isset($success_message) && $success_message != "") {
                                 echo "<div class='alert alert-success' role='alert'>";
@@ -34,7 +35,6 @@ $(function(){
                             <label for="inputVideoResume" class="col-sm-2 control-label">Video Introduction</label>
                             <div class="col-sm-10">
                                 <input type="file" name="userfile" size="20" />
-                                <camera id='grab' data-app-id='a-9b2579c0-d32a-0132-3490-12313d286eb7'></camera>
                                 <p class="help-block">Supported formats: .mp4, .mov (max. file size 2MB)<br />(width=560px, height=320px)</p>
                             </div>
                         </div>
@@ -45,33 +45,64 @@ $(function(){
                             </div>
                         </div><br />
                         <div class="form-group">
-                            <label for="inputJobMinSalary" class="col-sm-2 control-label">Min. Monthly Salary</label>
+                            <label for="inputJobTitle" class="col-sm-2 control-label">Job Tags</label>
                             <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputJobTags" name="inputJobTags" required data-role="tagsinput" placeholder="Add tags" />
+                                <p class="help-block">Please enter Tags and press enter to register.</p>
+                            </div>
+                        </div><br />
+                        <div class="form-group">
+                            <label for="inputJobMinSalary" class="col-sm-2 control-label">Min. Monthly Salary</label>
+                            <div class="col-sm-2">
+                                <select id="inputJobMinSalCurrCode" name="inputJobMinSalCurrCode" class="required form-control">
+                                    <option value="0">--None--</option>
+                                    <?php                                
+                                        $MinSalcurr_code_list = $this->db->query('SELECT distinct(country_currency_code) FROM candidate_country order by country_currency_code')->result_array();
+                                        foreach($MinSalcurr_code_list as $v) {
+                                            echo '<option value="'.$v['country_currency_code'].'">'.$v['country_currency_code'].'</option>';
+                                        }                                    
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-sm-8">
                                 <input type="number" class="form-control" id="inputJobMinSalary" name="inputJobMinSalary" placeholder="Min. Monthly Salary" required>
                             </div>
                         </div><br />
                         <div class="form-group">
                             <label for="inputJobMaxSalary" class="col-sm-2 control-label">Max. Monthly Salary</label>
-                            <div class="col-sm-10">
+                            <div class="col-sm-2">
+                                <select id="inputJobMaxSalCurrCode" name="inputJobMaxSalCurrCode" class="required form-control">
+                                    <option value="0">--None--</option>
+                                    <?php                                
+                                        $MinSalcurr_code_list = $this->db->query('SELECT distinct(country_currency_code) FROM candidate_country order by country_currency_code')->result_array();
+                                        foreach($MinSalcurr_code_list as $v) {
+                                            echo '<option value="'.$v['country_currency_code'].'">'.$v['country_currency_code'].'</option>';
+                                        }                                    
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-sm-8">
                                 <input type="number" class="form-control" id="inputJobMaxSalary" name="inputJobMaxSalary" placeholder="Max. Monthly Salary" required>
                             </div>
                         </div><br />
                         <div class="form-group">
                             <label for="inputJobPriworklocctry" class="col-sm-2 control-label">Primary Work Location Country</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputJobPriworklocctry" name="inputJobPriworklocctry" placeholder="Primary Work Location Country" required>
+                                <select id="inputJobPriworklocctry" name="inputJobPriworklocctry" class="required form-control">
+                                    <option value="0">--Please Select--</option>
+                                    <?php                                
+                                        $emp_location_list = $this->db->query('SELECT * FROM candidate_country order by country_name')->result_array();
+                                        foreach($emp_location_list as $v) {
+                                            echo '<option value="'.$v['country_name'].'">'.$v['country_name'].'</option>';
+                                        }                                    
+                                    ?>
+                                </select>
                             </div>
                         </div><br />
                         <div class="form-group">
                             <label for="inputJobPriworkloccity" class="col-sm-2 control-label">Primary Work Location City</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputJobPriworkloccity" name="inputJobPriworkloccity" placeholder="Primary Work Location City" required>
-                            </div>
-                        </div><br />                        
-                        <div class="form-group">
-                            <label for="inputJobCurrency" class="col-sm-2 control-label">Currency</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputJobCurrency" name="inputJobCurrency" placeholder="Currency" required>
                             </div>
                         </div><br />
                         <div class="form-group">

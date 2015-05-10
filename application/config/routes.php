@@ -40,6 +40,15 @@
 
 $route['default_controller'] = "home";
 $route['404_override'] = 'error/pagenotfound';
+$route['^ch/(.+)$'] = "$1";
+$route['^en/(.+)$'] = "$1";
+$route['^fr/(.+)$'] = "$1";
+$route['^jp/(.+)$'] = "$1";
+
+$route['^ch$'] = $route['default_controller'];
+$route['^en$'] = $route['default_controller'];
+$route['^fr$'] = $route['default_controller'];
+$route['^jp$'] = $route['default_controller'];
 
 $route['unauthorized']          = "error/unauthorized";
 $route['forbidden']             = "error/forbidden";

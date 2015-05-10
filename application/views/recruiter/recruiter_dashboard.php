@@ -6,10 +6,12 @@
                     <?php
                         $sess_array = array('username' => $this->session->userdata('logged_in'));
                         $jobs = $this->login_database->job_dashboard($sess_array);
+                        $userData = $this->session->userdata('user_data');
+                        //print_r($this->session->all_userdata());
                     ?>
                     <!-- To show only on mobile - start -->
                     <div class="visible-xs-block">
-                        <h2 class="sub-header">Welcome</h2>
+                        <h2 class="sub-header">Welcome <?php echo $userData[0]['employer_contact_firstname']." ".$userData[0]['employer_contact_lastname']; ?></h2>
                         <?php if($jobs){ ?>
                             <div class="list-group">
                                 <?php foreach($jobs as $job) { ?>
@@ -37,7 +39,7 @@
                     
                     <!-- To show only on Tablet - start -->
                     <div class="visible-sm-block">
-                        <h2 class="sub-header">Welcome</h2>
+                        <h2 class="sub-header">Welcome <?php echo $userData[0]['employer_contact_firstname']." ".$userData[0]['employer_contact_lastname']; ?></h2>
                         <div class="panel panel-default">
                             <table class="table table-striped">
                                 <thead>
@@ -76,7 +78,7 @@
                     
                     <!-- For larger Desktops -- start -->
                     <div class="table-responsive visible-md-block visible-lg-block">
-                        <h2 class="sub-header">Welcome</h2>
+                        <h2 class="sub-header">Welcome <?php echo $userData[0]['employer_contact_firstname']." ".$userData[0]['employer_contact_lastname']; ?></h2>
                         <div class="panel panel-default">
                             <table class="table table-striped">
                                 <thead>

@@ -3,6 +3,11 @@
 class Job extends MY_Controller {
 
     public function index() {
+        
+        $this->load->helper('language');        
+        $this->load->helper('url');
+        $this->lang->load('common');
+        
         $jobtitle  = $this->uri->segment(2);
         $jobnumber = $this->uri->segment(3);
 

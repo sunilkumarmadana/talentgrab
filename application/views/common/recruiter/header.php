@@ -14,9 +14,10 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="<?php echo https_url('/recruiter_dashboard')?>">Home</a></li>
-                        <li><a href="<?php echo https_url('/recruiter/job_create')?>">Create Job</a></li>
-                        <li><a href="/recruiter">Logout</a></li>
+                        <li><a href="<?php echo https_url('/en/recruiter_dashboard')?>">Home</a></li>
+                        <li><a href="<?php echo https_url('/en/recruiter/job_create')?>">Create Job</a></li>
+                        <li><a href="<?php echo https_url('/en/recruiter/profile')?>">Company Profile</a></li>
+                        <li><a href="/en/recruiter">Logout</a></li>
                         <!-- <li><a class="btn btn-warning" href="">Logout</a></li> -->
                     </ul>
                 </div>

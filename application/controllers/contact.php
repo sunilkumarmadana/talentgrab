@@ -5,8 +5,10 @@ class Contact extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->helper('view_helper');
-        
-        $this->load->library('form_validation');
+        $this->load->library('form_validation');        
+        $this->load->helper('language');        
+        $this->load->helper('url');
+        $this->lang->load('common');
     }
        
     public function index() {

@@ -14,7 +14,6 @@ $(function(){
             crossDomain : true 
         })
         .done(function(data) {
-            console.log(data);
             if(data == "This email is not registered with us!") {
 				$('.alert-danger').css("display","block").html(data);
 			} else {            

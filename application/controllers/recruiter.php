@@ -15,6 +15,10 @@ class Recruiter extends CI_Controller {
         
         // Load session library
         $this->load->library('session');
+        $this->load->helper('language');        
+        $this->load->helper('url');
+        
+        $this->lang->load('common');
         
         // Load database
         $this->load->model('login_database');
@@ -43,6 +47,24 @@ class Recruiter extends CI_Controller {
         $template["contents"] = $this->load->view('recruiter/index', null, true);
         $this->load->view('common/layout', $template);
 	}
+    
+    // Recruiter profile page.
+    public function profile() {
+        if($this->session->userdata('logged_in') != null || $this->session->userdata('logged_in') != "") {
+        
+            $head_params = array(
+                'title' => 'Employer Portal | Grab Talent',
+                'description' => "Grab Talent is the best online recruitment portal",
+                'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
+            );
+            $template["head"] = $this->load->view('common/recruiter/head', $head_params, true);
+            $template["header"] = $this->load->view('common/recruiter/header', null, true);
+            $template["contents"] = $this->load->view('recruiter/profile', null, true);
+            $this->load->view('common/recruiter/layout', $template);
+        } else {
+            redirect(base_url('recruiter'));
+        }
+    }
     
     // Check for employer login process
     public function recruiter_login() {
@@ -109,7 +131,7 @@ class Recruiter extends CI_Controller {
         $jobDesc = "<h2><b>".$this->input->post('inputJobTitle')."</b></h2><br />";
         $jobDesc .= "<p><b>Industry / Sub-Industry:</b>".$this->input->post('inputJobIndustry')." / ".$this->input->post('inputJobSubIndustry')."</p>";
         $jobDesc .= "<p><b>Job Category/Function:</b>".$this->input->post('inputJobCategory')."/".$this->input->post('inputJobFunction')."</p>";
-        $jobDesc .= "<p><b>Salary:</b>".$this->input->post('inputJobMinSalary')." - ".$this->input->post('inputJobMaxSalary')."</p>";
+        $jobDesc .= "<p><b>Salary:</b>".$this->input->post('inputJobMinSalCurrCode')." ".$this->input->post('inputJobMinSalary')." - ".$this->input->post('inputJobMaxSalCurrCode')." ".$this->input->post('inputJobMaxSalary')."</p>";
         $jobDesc .= "<p><b>Location:</b>".$this->input->post('inputJobPriworklocctry').", ".$this->input->post('inputJobPriworkloccity')."</p>";
         $jobDesc .= "<p><b>About Our Client:</b><br /></p>";
         $jobDesc .= "<p><b>Description:</b><br />".$this->input->post('inputJobDescription')."</p>";
@@ -128,11 +150,13 @@ class Recruiter extends CI_Controller {
                 
         $JobModels = $this->_saveJobs(
             $this->input->post('inputJobTitle'),
+            $this->input->post('inputJobMinSalCurrCode'),
             $this->input->post('inputJobMinSalary'),
+            $this->input->post('inputJobMaxSalCurrCode'),
             $this->input->post('inputJobMaxSalary'),
+            $this->input->post('inputJobTags'),
             $this->input->post('inputJobPriworklocctry'),
             $this->input->post('inputJobPriworkloccity'),
-            $this->input->post('inputJobCurrency'),
             $this->input->post('inputJobCategory'),
             $this->input->post('inputJobFunction'),
             $this->input->post('inputJobIndustry'),
@@ -159,7 +183,7 @@ class Recruiter extends CI_Controller {
     }
     
     // To save / register jobs into job table.
-    private function _saveJobs($jobTitle, $jobMinSal, $jobMaxSal, $jobPriwrkctry, $jobPriwrkcity, $jobCurrency, $jobCategory, $jobFunction, $jobIndustry, $jobSubIndustry, $jobDesc, $jobPosted, $createdBy, $vidname) {
+    private function _saveJobs($jobTitle, $jobMinSalCode, $jobMinSal, $jobMaxSalCode, $jobMaxSal, $jobTags, $jobPriwrkctry, $jobPriwrkcity, $jobCategory, $jobFunction, $jobIndustry, $jobSubIndustry, $jobDesc, $jobPosted, $createdBy, $vidname) {
 
         $JobModels = array();
 
@@ -169,11 +193,13 @@ class Recruiter extends CI_Controller {
         $JobModel = new grabtalent_job_model();
         $JobModel->row['job_number']                         = 'JOB-'.mt_rand();
         $JobModel->row['job_title']                          = $jobTitle;
+        $JobModel->row['min_salary_currency']                = $jobMinSalCode;
         $JobModel->row['min_month_salary']                   = $jobMinSal;
+        $JobModel->row['max_salary_currency']                = $jobMaxSalCode;
         $JobModel->row['max_month_salary']                   = $jobMaxSal;
         $JobModel->row['primary_work_location_country']      = $jobPriwrkctry;
         $JobModel->row['primary_work_location_city']         = $jobPriwrkcity;
-        $JobModel->row['currency']                           = $jobCurrency;
+        $JobModel->row['job_tags']                           = $jobTags;
         $JobModel->row['job_category']                       = $jobCategory;
         $JobModel->row['job_function']                       = $jobFunction;
         $JobModel->row['job_industry']                       = $jobIndustry;
@@ -227,30 +253,33 @@ class Recruiter extends CI_Controller {
     
     // Send forgot password link to recruiter.    
     public function sendforgotpwd() {
-        
-        $config = array(
-            'protocol' => 'smtp',
-            'smtp_host' => 'ssl://ns3-999.999servers.com',
-            'smtp_port' => 465,
-            'smtp_user' => 'sunil.madana.kumar@ricemerchant.com', // change it to yours
-            'smtp_pass' => 'Sunil2012Swathi', // change it to yours
-            'mailtype' => 'html',
-            'charset'=>'utf-8',
-            'wordwrap' => TRUE            
-        );
-        $message = $this->load->view('common/forgotpass','',true);
-        $this->load->library('email', $config);
-        $this->email->set_newline("\r\n");
-        $this->email->from('sunil.madana.kumar@ricemerchant.com','Grab Talent'); // change it to yours
-        $this->email->to($this->input->post("email"));// change it to yours
-        $this->email->subject('GrabTalent : Reset Password');
-        $this->email->message($message);
-        if($this->email->send()) {
-            redirect( base_url('recruiter') );
-            $this->session->set_flashdata('success_message', 'Please check your email! We have sent you a reset password link.');
+        $email_chk = $this->login_database->forgot_emppasswdemailchk($this->input->post("email"));        
+        if($email_chk == TRUE) {
+            $config = array(
+                'protocol' => 'smtp',
+                'smtp_host' => 'ssl://ns3-999.999servers.com',
+                'smtp_port' => 465,
+                'smtp_user' => 'sunil.madana.kumar@ricemerchant.com', // change it to yours
+                'smtp_pass' => 'Sunil2012Swathi', // change it to yours
+                'mailtype' => 'html',
+                'charset'=>'utf-8',
+                'wordwrap' => TRUE            
+            );
+            $message = $this->load->view('common/forgotpass','',true);
+            $this->load->library('email', $config);
+            $this->email->set_newline("\r\n");
+            $this->email->from('sunil.madana.kumar@ricemerchant.com','Grab Talent'); // change it to yours
+            $this->email->to($this->input->post("email"));// change it to yours
+            $this->email->subject('GrabTalent : Reset Password');
+            $this->email->message($message);
+            if($this->email->send()) {
+                echo "success";
+            } else {
+                //show_error($this->email->print_debugger());
+                echo "failure";
+            }
         } else {
-            //show_error($this->email->print_debugger());
-            $this->session->set_flashdata('error_message', 'Something went wrong. Please try again later!');
+            echo "This email is not registered with us!";
         }
     }
     

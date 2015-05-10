@@ -10,38 +10,38 @@
                         </div>
                         <?php endif?>
                         <div class="form-group">
-                            <p class="col-xs-12">You may leave us a message and we will get back to you as soon as possible.</p>
-                            <label class="col-xs-4">First Name*</label>
+                            <p class="col-xs-12"><?=lang('contact.headercontent');?></p>
+                            <label class="col-xs-4"><?=lang('contact.label1');?>*</label>
                             <div class="col-xs-8">
                                 <input name="firstname" type="text" class="form-control<?php if (form_error('firstname')) echo " error" ?>" id="inputFirstName" placeholder="Your first name" value="<?php echo set_value('firstname'); ?>">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-4">Last Name*</label>
+                            <label class="col-xs-4"><?=lang('contact.label2');?>*</label>
                             <div class="col-xs-8">
                                 <input name="lastname" type="text" class="form-control<?php if (form_error('lastname')) echo " error" ?>" id="inputLastName" placeholder="Your last name" value="<?php echo set_value('lastname'); ?>">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-4">Email*</label>
+                            <label class="col-xs-4"><?=lang('contact.label3');?>*</label>
                             <div class="col-xs-8">
                                 <input name="email" type="email" class="form-control<?php if (form_error('email')) echo " error" ?>" id="inputEmail" placeholder="Your email" value="<?php echo set_value('email'); ?>">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-4">Phone No</label>
+                            <label class="col-xs-4"><?=lang('contact.label4');?></label>
                             <div class="col-xs-8">
                                 <input name="phonenumber" type="tel" class="form-control<?php if (form_error('phonenumber')) echo " error" ?>" id="inputTel" placeholder="Your phone no." value="<?php echo set_value('phonenumber'); ?>">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-4">Reason for contact*</label>
+                            <label class="col-xs-4"><?=lang('contact.label5');?>*</label>
                             <div class="col-xs-8">
                                 <input name="reason" type="text" class="form-control<?php if (form_error('reason')) echo " error" ?>" id="inputReason" placeholder="Reason for contact" value="<?php echo set_value('reason'); ?>">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-4">Message*</label>
+                            <label class="col-xs-4"><?=lang('contact.label6');?>*</label>
                             <div class="col-xs-8">
                                 <textarea name="message" class="form-control<?php if (form_error('message')) echo " error" ?>" id="inputMessage" placeholder="Enter your message"><?php echo set_value('message'); ?></textarea>
                             </div>
@@ -55,8 +55,8 @@
                 </div>
                 
                 <div class="col-md-6 text-right">
-                    <h1 class="cover-heading">Contact Us</h1>
-                    <p>Call Us at +65 62244390</p>
+                    <h1 class="cover-heading"><?=lang('contact.heading1');?></h1>
+                    <p><?=lang('contact.label7');?>&nbsp;+65 62244390</p>
                     <p><a href="mailto:sales@grab-talent.com">sales@grab-talent.com</a></p>
                 </div>                
             </div>
