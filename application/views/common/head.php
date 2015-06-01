@@ -9,6 +9,7 @@
     <meta name="robots" content="noodp"/>    
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta http-equiv="Cache-control" content="public">
     <link rel="icon" href="/images/favicon.ico">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/page.css" rel="stylesheet">    
@@ -18,9 +19,10 @@
     <script src="/js/jquery-1.11.2.js"></script>
     <script src="/js/ie-emulation-modes-warning.js"></script>    
     <!-- <script src="/js/bootstrap.js"></script> -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
     <script src="/js/jquery.steps.js"></script>
     <script src="/js/jquery.validate_1.13.1.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>

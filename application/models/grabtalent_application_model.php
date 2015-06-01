@@ -5,8 +5,9 @@ class Grabtalent_application_model extends CI_Model {
     const TABLE_NAME = 'candidate_application';
 
     var $row = array(
-        'candidate_appln_job_id' => null,
+        'candidate_appln_ref_id' => null,
         'candidate_email' => null,
+        'candidate_appln_job_id' => null,
         'candidate_applied_date' => null
     );
 

@@ -281,7 +281,19 @@ class CI_Config {
 	{
 		return $this->slash_item('base_url').ltrim($this->_uri_string($uri), '/');
 	}
-
+    
+    /**
+	 * secure URL
+	 * Returns secure_url [. uri_string]
+	 *
+	 * @access public
+	 * @param string $uri
+	 * @return string
+	 */
+	function secure_url($uri = '')
+	{
+		return $this->slash_item('base_ssl_url').ltrim($this->_uri_string($uri), '/');
+	}
 	// -------------------------------------------------------------
 
 	/**

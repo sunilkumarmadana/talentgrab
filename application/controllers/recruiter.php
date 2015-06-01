@@ -15,13 +15,17 @@ class Recruiter extends CI_Controller {
         
         // Load session library
         $this->load->library('session');
-        $this->load->helper('language');        
+        
+        $this->load->helper('cookie');
+        $this->load->helper('language');
         $this->load->helper('url');
         
         $this->lang->load('common');
         
         // Load database
         $this->load->model('login_database');
+        
+        $curr_lang = $this->lang->lang();
         
         if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") {
             $url = "https://". $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
@@ -33,7 +37,7 @@ class Recruiter extends CI_Controller {
     
     // Employer Portal login page with user-email and password.
 	public function index() {
-        $session_items = array('job_detail' => '', 'logged_in' => '');
+        $session_items = array('job_detail' => '', 'logged_in' => '', 'user_data' => '');
         $this->session->unset_userdata($session_items);
         
         $head_params = array(
@@ -46,195 +50,6 @@ class Recruiter extends CI_Controller {
         $template["header"] = $this->load->view('common/header', null, true);
         $template["contents"] = $this->load->view('recruiter/index', null, true);
         $this->load->view('common/layout', $template);
-	}
-    
-    // Recruiter profile page.
-    public function profile() {
-        if($this->session->userdata('logged_in') != null || $this->session->userdata('logged_in') != "") {
-        
-            $head_params = array(
-                'title' => 'Employer Portal | Grab Talent',
-                'description' => "Grab Talent is the best online recruitment portal",
-                'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
-            );
-            $template["head"] = $this->load->view('common/recruiter/head', $head_params, true);
-            $template["header"] = $this->load->view('common/recruiter/header', null, true);
-            $template["contents"] = $this->load->view('recruiter/profile', null, true);
-            $this->load->view('common/recruiter/layout', $template);
-        } else {
-            redirect(base_url('recruiter'));
-        }
-    }
-    
-    // Check for employer login process
-    public function recruiter_login() {
-        
-        $this->form_validation->set_rules('emailaddress', 'Email Address', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
-    
-        if ($this->form_validation->run() == FALSE) {
-            redirect( base_url('recruiter/index') );
-        } else {
-            $data = array(
-                'username' => $this->input->post('emailaddress'),
-                'password' => $this->input->post('password')
-            );
-            $result = $this->login_database->employerlogin($data);
-
-            if($result == TRUE){                                
-                // Add user data in session
-                $this->session->set_userdata('logged_in', $this->input->post('emailaddress'));                                
-                redirect( base_url('recruiter_dashboard') );
-            } else {
-                $this->session->set_flashdata('error_message', 'Invalid Email Address or Password');
-                redirect( base_url('recruiter') );
-            }
-        }
-    }
-    
-    public function job() {
-        $jobnumber = $this->uri->segment(3);
-        $job_detail = $this->login_database->read_job_information($jobnumber);
-        $this->session->set_userdata('job_detail', $job_detail);
-
-        $head_params = array(
-            'title' => 'Employer Portal | Grab Talent',
-            'description' => "Grab Talent is the best online recruitment portal",
-            'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
-        );
-        
-        $template["head"] = $this->load->view('common/recruiter/head', $head_params, true);
-        $template["header"] = $this->load->view('common/recruiter/header', null, true);
-        $template["contents"] = $this->load->view('recruiter/job', null, true);
-        $this->load->view('common/recruiter/layout', $template);
-    }
-    
-    // Check for user login process
-    public function job_create() {
-        
-        $head_params = array(
-            'title' => 'Employer Portal | Grab Talent',
-            'description' => "Grab Talent is the best online recruitment portal",
-            'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
-        );
-        $template["head"] = $this->load->view('common/recruiter/head', $head_params, true);
-        $template["header"] = $this->load->view('common/recruiter/header', null, true);
-        $template["contents"] = $this->load->view('recruiter/job_create', null, true);
-        $this->load->view('common/recruiter/layout', $template);
-    }
-    
-    public function job_register() {
-        //To retrieve email from session.
-        $email = $this->session->userdata('logged_in');                                        
-        
-        // Create Job Description
-        $jobDesc = "<h2><b>".$this->input->post('inputJobTitle')."</b></h2><br />";
-        $jobDesc .= "<p><b>Industry / Sub-Industry:</b>".$this->input->post('inputJobIndustry')." / ".$this->input->post('inputJobSubIndustry')."</p>";
-        $jobDesc .= "<p><b>Job Category/Function:</b>".$this->input->post('inputJobCategory')."/".$this->input->post('inputJobFunction')."</p>";
-        $jobDesc .= "<p><b>Salary:</b>".$this->input->post('inputJobMinSalCurrCode')." ".$this->input->post('inputJobMinSalary')." - ".$this->input->post('inputJobMaxSalCurrCode')." ".$this->input->post('inputJobMaxSalary')."</p>";
-        $jobDesc .= "<p><b>Location:</b>".$this->input->post('inputJobPriworklocctry').", ".$this->input->post('inputJobPriworkloccity')."</p>";
-        $jobDesc .= "<p><b>About Our Client:</b><br /></p>";
-        $jobDesc .= "<p><b>Description:</b><br />".$this->input->post('inputJobDescription')."</p>";
-        $jobDesc .= "<p><b>Additional Information:</b><br><br>Working Hours: 9.00am – 6.00pm (Mon – Fri)<br><br><br><br><b>EA License No.:</b>10C2978</p>";
-                
-        // Check validation for user input in SignUp form
-        $this->load->model('grabtalent_job_model');
-        
-        if(!file_exists($_FILES['userfile']['name']) || !is_uploaded_file($_FILES['userfile']['name'])) {
-            $video_name = '';
-        } else {
-            $filename  = $_FILES['userfile']['name'];
-            $fileext = explode(".", $filename);
-            $video_name = preg_replace("/[[:space:]]+/", "_", htmlspecialchars( $this->input->post('inputJobTitle') ) ) . "_" . date('Ymdhms').".".$fileext[1];    
-        }       
-                
-        $JobModels = $this->_saveJobs(
-            $this->input->post('inputJobTitle'),
-            $this->input->post('inputJobMinSalCurrCode'),
-            $this->input->post('inputJobMinSalary'),
-            $this->input->post('inputJobMaxSalCurrCode'),
-            $this->input->post('inputJobMaxSalary'),
-            $this->input->post('inputJobTags'),
-            $this->input->post('inputJobPriworklocctry'),
-            $this->input->post('inputJobPriworkloccity'),
-            $this->input->post('inputJobCategory'),
-            $this->input->post('inputJobFunction'),
-            $this->input->post('inputJobIndustry'),
-            $this->input->post('inputJobSubIndustry'),
-            $jobDesc,
-            $this->input->post('postjob'),
-            $email,
-            $video_name
-        );
-                
-        if($this->db->trans_status() == '1') {
-            $this->session->set_flashdata('success_message', 'Your Job was saved successfully!');
-            $this->_do_upload($video_name);
-        } else {
-            $this->session->set_flashdata('error_message', 'Your Job was not saved, please try again!');
-        }
-        redirect( base_url('/recruiter/job_create') );
-    }
-    
-    // Logout from admin page
-    public function logout() {    
-        // Removing session data
-        redirect( base_url('recruiter') );
-    }
-    
-    // To save / register jobs into job table.
-    private function _saveJobs($jobTitle, $jobMinSalCode, $jobMinSal, $jobMaxSalCode, $jobMaxSal, $jobTags, $jobPriwrkctry, $jobPriwrkcity, $jobCategory, $jobFunction, $jobIndustry, $jobSubIndustry, $jobDesc, $jobPosted, $createdBy, $vidname) {
-
-        $JobModels = array();
-
-        $this->db->trans_start();
-
-        // setup password
-        $JobModel = new grabtalent_job_model();
-        $JobModel->row['job_number']                         = 'JOB-'.mt_rand();
-        $JobModel->row['job_title']                          = $jobTitle;
-        $JobModel->row['min_salary_currency']                = $jobMinSalCode;
-        $JobModel->row['min_month_salary']                   = $jobMinSal;
-        $JobModel->row['max_salary_currency']                = $jobMaxSalCode;
-        $JobModel->row['max_month_salary']                   = $jobMaxSal;
-        $JobModel->row['primary_work_location_country']      = $jobPriwrkctry;
-        $JobModel->row['primary_work_location_city']         = $jobPriwrkcity;
-        $JobModel->row['job_tags']                           = $jobTags;
-        $JobModel->row['job_category']                       = $jobCategory;
-        $JobModel->row['job_function']                       = $jobFunction;
-        $JobModel->row['job_industry']                       = $jobIndustry;
-        $JobModel->row['job_sub_industry']                   = $jobSubIndustry;
-        $JobModel->row['job_description']                    = $jobDesc;
-        $JobModel->row['post_date']                          = date('Y-m-d h:m:s');
-        $JobModel->row['post_job']                           = $jobPosted;
-        $JobModel->row['created_by']                         = $createdBy;
-        $JobModel->row['created_date']                       = date('Y-m-d h:m:s');
-        $JobModel->row['view_count']                         = '0';
-        $JobModel->row['text_search']                        = '';
-        $JobModel->row['delete_flg']                         = '0';
-        $JobModel->row['video_url']                          = $vidname;        
-        $JobModel->save();
-        array_push($JobModels, $JobModel);
-
-        $this->db->trans_complete();
-
-        return $JobModels;
-    }
-    
-    public function _do_upload($flname) {
-        
-        $config['upload_path'] = 'public/recruiter/';
-		$config['allowed_types'] = 'mp4|mov';
-		$config['max_size']	= '2048';
-        $config['file_name'] = $flname;
-
-		$this->load->library('upload', $config);
-
-		if ( ! $this->upload->do_upload()) {
-            $this->session->set_flashdata('error_message', $this->upload->display_errors());
-		} else {
-            $this->session->set_flashdata('success_message', 'All Data has been uploaded successfully!!');
-		}
 	}
     
     // Load Forgot Password Page
@@ -273,16 +88,225 @@ class Recruiter extends CI_Controller {
             $this->email->subject('GrabTalent : Reset Password');
             $this->email->message($message);
             if($this->email->send()) {
-                echo "success";
+                echo "success; Please check your email for new password!";
             } else {
                 //show_error($this->email->print_debugger());
-                echo "failure";
+                echo "failure; Email was not sent, please try again.";
             }
         } else {
             echo "This email is not registered with us!";
         }
     }
     
+    // Change password
+    public function change_candidate_password() {
+        
+        $newpassword = md5($this->input->post('newpassword')); 
+        
+        // To initially check if the email is registered in the system.
+        $condition = "employer_email =" . "'" . $this->input->post('employer-email') . "'";
+        $this->db->select('*');
+        $this->db->from('employer_login');
+        $this->db->where($condition);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            $data = array('employer_password' => $newpassword);
+            $this->db->where('employer_email', $this->input->post('employer-email'));
+            $this->db->update('employer_login', $data);
+            if($this->db->trans_status() == '1') {
+                echo "success";
+            } else {
+                echo "failure";            
+            }
+        } else {
+            return false;
+        }
+    }
+        
+    // Check for employer login process
+    public function recruiter_login() {
+        
+        $data = array(
+            'username' => $this->input->post('emailaddress'),
+            'password' => $this->input->post('password')
+        );
+        $result = $this->login_database->employerlogin($data);
+        
+        if($result == TRUE){                                
+            // Add user data in session
+            $this->session->set_userdata('logged_in', $this->input->post('emailaddress'));                        
+            $redirect_url = str_replace('http://','https://',base_url()).$this->lang->lang()."/recruiter_dashboard";
+            echo "success,".$redirect_url;
+        } else {
+            echo "error,Invalid Username or Password";
+        }
+        
+    }
+    
+    // Recruiter profile page.
+    public function profile() {
+        if($this->session->userdata('logged_in') != null || $this->session->userdata('logged_in') != "") {
+        
+            $head_params = array(
+                'title' => 'Employer Portal | Grab Talent',
+                'description' => "Grab Talent is the best online recruitment portal",
+                'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
+            );
+            $template["head"] = $this->load->view('common/recruiter/head', $head_params, true);
+            $template["header"] = $this->load->view('common/recruiter/header', null, true);
+            $template["contents"] = $this->load->view('recruiter/profile', null, true);
+            $this->load->view('common/recruiter/layout', $template);
+        } else {
+            redirect( secure_url($curr_lang.'/recruiter') );
+        }
+    }
+    
+    // Recruiter profile update.
+    public function profile_update() {
+        // 1. Updated Profile data        
+        $recruiter_profupd = array(
+            'employer_phone' => $this->input->post('inputPhonenumber'),
+            'employer_fax' => $this->input->post('inputFaxnumber'),
+            'employer_contact_firstname' => $this->input->post('inputEmpctntFirstName'),
+            'employer_contact_lastname' => $this->input->post('inputEmpctntLastName'),
+            'employer_description' => $this->input->post('inputbriefDesc')                                             
+        );
+        $this->db->where('employer_contact_email', $this->input->post('profile-email'));
+        $this->db->update('employers', $recruiter_profupd);
+        if($this->db->trans_status() == '1') {
+            echo "success;Your Profile has been updated successfully!!";
+        } else {
+            echo "failure;Profile was not updated, please try again!";
+        }
+                        
+        // 2. Refresh session data
+        $sess_array = array('username' => $this->session->userdata('logged_in'));
+        $empinfo = $this->login_database->read_user_information($sess_array,'employer');
+        $this->session->set_userdata('user_data', $empinfo);
+    }
+    
+    public function job() {
+        $jobnumber = $this->uri->segment(4);
+        $job_detail = $this->login_database->read_job_information($jobnumber);
+        $this->session->set_userdata('job_detail', $job_detail);
+
+        $head_params = array(
+            'title' => 'Employer Portal | Grab Talent',
+            'description' => "Grab Talent is the best online recruitment portal",
+            'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
+        );
+        
+        $template["head"] = $this->load->view('common/recruiter/head', $head_params, true);
+        $template["header"] = $this->load->view('common/recruiter/header', null, true);
+        $template["contents"] = $this->load->view('recruiter/job', null, true);
+        $this->load->view('common/recruiter/layout', $template);
+    }
+    
+    // Check for user login process
+    public function job_create() {
+        
+        $head_params = array(
+            'title' => 'Employer Portal | Grab Talent',
+            'description' => "Grab Talent is the best online recruitment portal",
+            'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
+        );
+        $template["head"] = $this->load->view('common/recruiter/head', $head_params, true);
+        $template["header"] = $this->load->view('common/recruiter/header', null, true);
+        $template["contents"] = $this->load->view('recruiter/job_create', null, true);
+        $this->load->view('common/recruiter/layout', $template);
+    }
+    
+    public function job_register() {
+        
+        //To retrieve email from session.
+        $email = $this->session->userdata('logged_in');
+                
+        // Check validation for user input in SignUp form
+        $this->load->model('grabtalent_job_model');       
+        $video_name = '';
+        
+        $JobModels = $this->_saveJobs(
+            $this->input->post('inputJobTitle'),
+            $this->input->post('inputJobMinSalCurrCode'),
+            $this->input->post('inputJobMinSalary'),
+            $this->input->post('inputJobMaxSalCurrCode'),
+            $this->input->post('inputJobMaxSalary'),
+            $this->input->post('inputJobMandatorySkl'),
+            $this->input->post('inputJobDesiredSkl'),
+            $this->input->post('inputJobPriworklocctry'),
+            $this->input->post('inputJobPriworkloccity'),
+            $this->input->post('inputJobCategory'),
+            $this->input->post('inputJobFunction'),
+            $this->input->post('inputJobIndustry'),
+            $this->input->post('inputJobSubIndustry'),
+            $this->input->post('inputJobDescription'),
+            $this->input->post('inputJobBenefits'),
+            $this->input->post('inputJobWorkingHours'),
+            $this->input->post('postjob'),
+            $email,
+            $video_name
+        );
+                
+        if($this->db->trans_status() == '1') {
+            echo "success;Your Job was saved successfully!";            
+            if( !is_uploaded_file($_FILES['userfile']['name']) ) {
+                $video_name = '';
+            } else {
+                $filename  = $_FILES['userfile']['name'];
+                $fileext = explode(".", $filename);
+                $video_name = preg_replace("/[[:space:]]+/", "_", htmlspecialchars( $this->input->post('inputJobTitle') ) ) . "_" . date('Ymdhms').".".$fileext[1];    
+            }
+        } else {
+            echo "error;Your Job was not saved, please try again!";
+        }
+    }
+    
+    // To save / register jobs into job table.
+    private function _saveJobs($jobTitle, $jobMinSalCode, $jobMinSal, $jobMaxSalCode, $jobMaxSal, $mandtSkills, $desiredSkills, $jobPriwrkctry, $jobPriwrkcity, $jobCategory, $jobFunction, $jobIndustry, $jobSubIndustry, $jobDesc, $jobBenefits, $jobWorkinghrs, $jobPosted, $createdBy, $vidname) {
+
+        $JobModels = array();
+
+        $this->db->trans_start();                                
+
+        // setup password
+        $JobModel = new grabtalent_job_model();
+        $JobModel->row['job_number']                         = 'JOB-'.date('ym').'-'.mt_rand(10000000, 99999999);
+        $JobModel->row['job_title']                          = $jobTitle;
+        $JobModel->row['job_minsalary_currency']             = $jobMinSalCode;
+        $JobModel->row['job_minmonth_salary']                = $jobMinSal;
+        $JobModel->row['job_maxsalary_currency']             = $jobMaxSalCode;
+        $JobModel->row['job_maxmonth_salary']                = $jobMaxSal;
+        $JobModel->row['job_primaryworklocation_country']    = $jobPriwrkctry;
+        $JobModel->row['job_primaryworklocation_city']       = $jobPriwrkcity;
+        $JobModel->row['job_mandatory_skills']               = $mandtSkills;
+        $JobModel->row['job_desired_skills']                 = $desiredSkills;
+        $JobModel->row['job_category']                       = $jobCategory;
+        $JobModel->row['job_function']                       = $jobFunction;
+        $JobModel->row['job_industry']                       = $jobIndustry;
+        $JobModel->row['job_sub_industry']                   = $jobSubIndustry;
+        $JobModel->row['job_description']                    = htmlEntities($jobDesc);
+        $JobModel->row['job_benefits']                       = $jobBenefits;
+        $JobModel->row['job_workinghours']                   = $jobWorkinghrs;
+        $JobModel->row['job_postdate']                       = date('Y-m-d h:m:s');
+        $JobModel->row['job_posted']                         = $jobPosted;
+        $JobModel->row['job_created_by']                     = $createdBy;
+        $JobModel->row['job_created_date']                   = date('Y-m-d h:m:s');
+        $JobModel->row['job_view_count']                     = '0';
+        $JobModel->row['job_active']                         = 'Yes';
+        $JobModel->row['job_video_url']                      = $vidname;        
+        $JobModel->save();
+        array_push($JobModels, $JobModel);
+
+        $this->db->trans_complete();
+
+        return $JobModels;
+    }
+        
+    // Logout from admin page
+    public function logout() {    
+        // Removing session data
+        redirect( secure_url($curr_lang.'/recruiter') );
+    }    
 }
 
 /* End of file welcome.php */

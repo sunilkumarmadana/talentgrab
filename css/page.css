@@ -1,161 +1,112 @@
-/** Globals */
-html, body {
-    height: 100%;
-    -ms-word-break: break-all; 
-    word-break: break-all; 
-    word-break: break-word; /* old webkit */ 
+/** Globals - Start **/
+html, body { height: 100%; -ms-word-break: break-all; word-break: break-all; word-break: break-word; }
+a { color: #40E0D0; }
+a:focus, a:hover { color: #ffa500; }
+.btn-default { color: #333; text-shadow: none; background-color: #ffa500; border: 1px solid #ffa500; }
+.btn-default:hover, .btn-default:focus { color: #333; text-shadow: none; background-color: #f1c40f; border: 1px solid #f1c40f; }
+.form-signin { max-width: 330px; padding: 15px; margin: 5% auto; }
+.form-signin .form-signin-heading, .form-signin .checkbox { margin-bottom: 10px; }
+.form-signin .checkbox { font-weight: normal; }
+.form-signin .form-control { 
+    position: relative; 
+    height: auto; 
+    -webkit-box-sizing: border-box; 
+    -moz-box-sizing: border-box; 
+    box-sizing: border-box; 
+    padding: 10px; 
+    font-size: 16px; 
+}
+.form-signin .form-control:focus { z-index: 2; }
+.form-signin input[type="email"] { margin-bottom: -1px; border-bottom-right-radius: 0; border-bottom-left-radius: 0; }
+.form-signin input[type="password"] { margin-bottom: 10px; border-top-left-radius: 0; border-top-right-radius: 0; }
+
+/* Recruiter WYSIWYG Editor */
+#editor {
+	max-height: 100%;
+	height: 300px;
+	background-color: white;
+	border-collapse: separate; 
+	border: 1px solid rgb(204, 204, 204); 
+	padding: 4px; 
+	box-sizing: content-box; 
+	-webkit-box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset; 
+	box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;
+	border-top-right-radius: 3px; border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px; border-top-left-radius: 3px;
+	overflow: scroll;
+	outline: none;
 }
 
-
-.borderless tbody tr td, .borderless tbody tr th, .borderless thead tr th {
-    border: none;
+div[data-role="editor-toolbar"] { 
+    -webkit-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none; 
+    border-radius:5px; 
+    border:1px solid #195f91;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; 
 }
 
+.dropdown-menu a { cursor: pointer; }
+/** Globals - End **/
+
+div.img-div { height:150px; width:150px; overflow:hidden; border-radius:50%; }
+.borderless tbody tr td, .borderless tbody tr th, .borderless thead tr th { border: none; }
 .td-spacer { padding-left: 35px !important; }
-
 input.error { background-color: #fbe3e4; border:1.5px solid #f00;}
-
 select.error { background-color: #fbe3e4; border:1.5px solid #f00;}
 
+/** Navbar **/
+.navbar-inverse .navbar-brand { color: #F0AD00; }
+.navbar-inverse .navbar-nav>li>a { color: #fff; }
+.navbar-inverse .navbar-nav>li>a:focus, .navbar-inverse .navbar-nav>li>a:hover { color: #F0AD00; }
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover { color: #F0AD00; font-weight:bold; }
 /** Cover */
 .cover { padding: 0 20px; }
-
-.cover .btn-lg {
-  padding: 10px 20px;
-  font-weight: bold;
-}
-
-.cover-container {
-  margin-right: auto;
-  margin-left: auto;
-}
+.cover .btn-lg { padding: 10px 20px; font-weight: bold; }
+.cover-container { margin-right: auto; margin-left: auto; }
 
 /* Carousel base class */
-.carousel {
-  height: 250px;
-  margin-bottom: 60px;
-}
+.carousel { height: 250px; margin-bottom: 60px; }
 /* Since positioning the image, we need to help out the caption */
-.carousel-caption {
-  z-index: 10;
-}
+.carousel-caption { z-index: 10; }
 
 /* Declare heights because of positioning of img element */
-.carousel .item {
-  height: 250px;
-  background-color: #777;
-}
-.carousel-inner > .item > img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  min-width: 100%;
-  height: 250px;
+.carousel .item { height: 250px; background-color: #777; }
+.carousel-inner > .item > img { position: absolute; top: 0; left: 0; min-width: 100%; height: 250px; }
+
+/* Homepage */
+.homepage-wrapper-inner { display: table-cell; vertical-align: top; }
+.inner { float: left; }
+.homepage-wrapper { 
+    background-image: url('../images/banner2.jpg'); 
+    background-size: cover; 
+    display: table; 
+    width: 100%; 
+    height: 100%; 
+    min-height: 100%; 
+    -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5); 
+    box-shadow: inset 0 0 100px rgba(0,0,0,.5); 
 }
 
-/* Padding for spacing */
-.inner {
-  float: left;
-}
+/* About Us */
+.aboutus-wrapper { display: table; width: 100%; height: 100%; min-height: 100%; }
+.aboutus-wrapper-inner { display: table-cell; vertical-align: top; }
+/* Contact Us */
+.contactus-wrapper { display: table; width: 100%; height: 100%; min-height: 100%; }
+.contactus-wrapper-inner { display: table-cell; vertical-align: top; }
+/* Recruiter */
+.recruiter-wrapper { display: table; width: 100%; height: 100%; min-height: 100%; }
+.recruiter-wrapper-inner { display: table-cell; vertical-align: top; }
+/* Job Seeker */
+.jobseeker-wrapper { display: table; width: 100%; height: 100%; min-height: 100%; }
+.jobseeker-wrapper-inner { display: table-cell; vertical-align: top; }
 
-/* Extra markup and styles for table-esque vertical and horizontal centering */
-.homepage-wrapper {
-    background-image: url('../images/banner2.jpg');
-    background-size: cover;
-    display: table;
-    width: 100%;
-    height: 100%; /* For at least Firefox */
-    min-height: 100%;
-    -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
-    box-shadow: inset 0 0 100px rgba(0,0,0,.5);
-}
-
-.homepage-wrapper-inner {
-  display: table-cell;
-  vertical-align: top;
-}
-
-.site-wrapper {
-    display: table;
-    width: 100%;
-    height: 100%; /* For at least Firefox */
-    min-height: 100%;
-}
-.site-wrapper-inner {
-  display: table-cell;
-  vertical-align: top;
-}
-
-.aboutus-wrapper {
-    display: table;
-    width: 100%;
-    height: 100%; /* For at least Firefox */
-    min-height: 100%;
-}
-.aboutus-wrapper-inner {
-  display: table-cell;
-  vertical-align: top;
-}
-
-/* Links */
-a {
-  color: #40E0D0;  
-}
-a:focus,
-a:hover {
-  color: #ffa500;
-}
-
-/* Custom default button */
-.btn-default{
-    color: #333;
-    text-shadow: none; /* Prevent inheritence from `body` */
-    background-color: #ffa500;
-    border: 1px solid #ffa500;
-}
-.btn-default:hover,
-.btn-default:focus {
-  color: #333;
-  text-shadow: none; /* Prevent inheritence from `body` */
-  background-color: #f1c40f;
-  border: 1px solid #f1c40f;
-}
-
-.form-signin {
-  max-width: 330px;
-  padding: 15px;
-  margin: 5% auto;
-}
-.form-signin .form-signin-heading,
-.form-signin .checkbox {
-  margin-bottom: 10px;
-}
-.form-signin .checkbox {
-  font-weight: normal;
-}
-.form-signin .form-control {
-  position: relative;
-  height: auto;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-  padding: 10px;
-  font-size: 16px;
-}
-.form-signin .form-control:focus {
-  z-index: 2;
-}
-.form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-.form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-
+/* Candidate Register Page */
 .wizard,.tabcontrol{display:block;width:100%;overflow:hidden}
 .wizard a,.tabcontrol a{outline:0}
 .wizard ul,.tabcontrol ul{list-style:none!important;padding:0;margin:0}
@@ -168,12 +119,32 @@ a:hover {
 .wizard>.steps>ul>li{width:25%}
 .wizard>.steps>ul>li,.wizard>.actions>ul>li{float:left}
 .wizard.vertical>.steps>ul>li{float:none;width:100%}
-.wizard>.steps a,.wizard>.steps a:hover,.wizard>.steps a:active{display:block;width:auto;margin:0 .5em .5em;padding:1em 1em;text-decoration:none;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px}
+.wizard>.steps a,.wizard>.steps a:hover,.wizard>.steps a:active{
+    display:block;
+    width:auto;
+    margin:0 .5em .5em;
+    padding:1em 1em;
+    text-decoration:none;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+}
 .wizard>.steps .disabled a,.wizard>.steps .disabled a:hover,.wizard>.steps .disabled a:active{background:#eee;color:#aaa;cursor:default}
-.wizard>.steps .current a,.wizard>.steps .current a:hover,.wizard>.steps .current a:active{background:#2184be;color:#fff;cursor:default}
+.wizard>.steps .current a,.wizard>.steps .current a:hover,.wizard>.steps .current a:active{ background:#f0ad4e; color:#000; cursor:default; font-weight:bold; }
 .wizard>.steps .done a,.wizard>.steps .done a:hover,.wizard>.steps .done a:active{background:#9dc8e2;color:#fff}
 .wizard>.steps .error a,.wizard>.steps .error a:hover,.wizard>.steps .error a:active{background:#ff3111;color:#fff}
-.wizard>.content{background:#eee;display:block;margin:.5em;min-height:45em;overflow:hidden;position:relative;width:auto;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px}
+.wizard>.content{
+    background:#eee;
+    display:block;
+    margin:.5em;
+    min-height:45em;
+    overflow:hidden;
+    position:relative;
+    width:auto;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+}
 .wizard.vertical>.content{display:inline;float:left;margin:0 2.5% .5em 2.5%;width:65%}
 .wizard>.content>.body{float:left;position:absolute;width:100%;height:95%;padding:2.5%}
 .wizard>.content>.body ul{list-style:disc!important}
@@ -189,11 +160,30 @@ a:hover {
 .wizard>.actions>ul{display:inline-block;text-align:right}
 .wizard>.actions>ul>li{margin:0 .5em}
 .wizard.vertical>.actions>ul>li{margin:0 0 0 1em}
-.wizard>.actions a,.wizard>.actions a:hover,.wizard>.actions a:active{background:#2184be;color:#fff;display:block;padding:.5em 1em;text-decoration:none;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px}
+.wizard>.actions a,.wizard>.actions a:hover,.wizard>.actions a:active{
+    background:#2184be;
+    color:#fff;
+    display:block;
+    padding:.5em 1em;
+    text-decoration:none;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+}
 .wizard>.actions .disabled a,.wizard>.actions .disabled a:hover,.wizard>.actions .disabled a:active{background:#eee;color:#aaa}
 .wizard>.loading{}.wizard>.loading .spinner{}.tabcontrol>.steps{position:relative;display:block;width:100%}
 .tabcontrol>.steps>ul{position:relative;margin:6px 0 0 0;top:1px;z-index:1}
-.tabcontrol>.steps>ul>li{float:left;margin:5px 2px 0 0;padding:1px;-webkit-border-top-left-radius:5px;-webkit-border-top-right-radius:5px;-moz-border-radius-topleft:5px;-moz-border-radius-topright:5px;border-top-left-radius:5px;border-top-right-radius:5px}
+.tabcontrol>.steps>ul>li{
+    float:left;
+    margin:5px 2px 0 0;
+    padding:1px;
+    -webkit-border-top-left-radius:5px;
+    -webkit-border-top-right-radius:5px;
+    -moz-border-radius-topleft:5px;
+    -moz-border-radius-topright:5px;
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+}
 .tabcontrol>.steps>ul>li:hover{background:#edecec;border:1px solid #bbb;padding:0}
 .tabcontrol>.steps>ul>li.current{background:#fff;border:1px solid #bbb;border-bottom:0 none;padding:0 0 1px 0;margin-top:0}
 .tabcontrol>.steps>ul>li>a{color:#5f5f5f;display:inline-block;border:0 none;margin:0;padding:10px 30px;text-decoration:none}
@@ -218,9 +208,38 @@ a:hover {
 .prettyprint.linenums{-webkit-box-shadow:inset 40px 0 0 #fbfbfc,inset 41px 0 0 #ececf0;-moz-box-shadow:inset 40px 0 0 #fbfbfc,inset 41px 0 0 #ececf0;box-shadow:inset 40px 0 0 #fbfbfc,inset 41px 0 0 #ececf0}
 ol.linenums{margin:0 0 0 33px}
 ol.linenums li{padding-left:12px;color:#bebec5;line-height:20px;text-shadow:0 1px 0 #fff}
+/* Vertical Offset Top */
+.vert-offset-top-12 { margin-top: 12em; }
+.vert-offset-top-11 { margin-top: 11em; }
+.vert-offset-top-10 { margin-top: 10em; }
+.vert-offset-top-9 { margin-top: 9em; }
+.vert-offset-top-8 { margin-top: 8em; }
+.vert-offset-top-7 { margin-top: 7em; }
+.vert-offset-top-6 { margin-top: 6em; }
+.vert-offset-top-5 { margin-top: 5em; }
+.vert-offset-top-4 { margin-top: 4em; }
+.vert-offset-top-3 { margin-top: 3em; }
+.vert-offset-top-2 { margin-top: 2em; }
+.vert-offset-top-1 { margin-top: 1em; }
+.vert-offset-top-0 { margin-top: 0em; }
+/* Vertical Offset Bottom */
+.vert-offset-bottom-12{ margin-bottom: 12em; }
+.vert-offset-bottom-11 { margin-bottom: 11em; }
+.vert-offset-bottom-10 { margin-bottom: 10em; }
+.vert-offset-bottom-9 { margin-bottom: 9em; }
+.vert-offset-bottom-8 { margin-bottom: 8em; }
+.vert-offset-bottom-7 { margin-bottom: 7em; }
+.vert-offset-bottom-6 { margin-bottom: 6em; }
+.vert-offset-bottom-5 { margin-bottom: 5em; }
+.vert-offset-bottom-4 { margin-bottom: 4em; }
+.vert-offset-bottom-3 { margin-bottom: 3em; }
+.vert-offset-bottom-2 { margin-bottom: 2em; }
+.vert-offset-bottom-1 { margin-bottom: 1em; }
+.vert-offset-bottom-0 { margin-bottom: 0em; }
 
-/* Mobile Displays: 320px – 480px */
-@media only screen and (min-width: 20em) { 
+/* Landscape phones and down */
+@media (max-width: 480px) {
+    /* Home page*/
     .homepage-wrapper {
         background-image: url('../images/banner2_phone.jpg');
         background-size: cover;
@@ -230,39 +249,30 @@ ol.linenums li{padding-left:12px;color:#bebec5;line-height:20px;text-shadow:0 1p
         min-height: 100%;
         -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
         box-shadow: inset 0 0 100px rgba(0,0,0,.5);
-    }
-    
-    /* Start the vertical centering */
-    .site-wrapper-inner {
         vertical-align: top;
-        padding-top: 15%;
+        padding-top: 10%;
     }
     
     /* About Us Page */
-    .aboutus-wrapper {
-        vertical-align: top;
-        padding-top: 15%;
-    }
+    .aboutus-wrapper { vertical-align: top; padding-top: 15%; }
+    
+    /* Contact Us Page */
+    .contactus-wrapper { vertical-align: top; padding-top: 15%; }
+    
+    /* Recruiter Login Page */
+    .recruiter-wrapper { vertical-align: top; padding-top: 15%; }
+    
+    /* JobSeeker Login Page */
+    .jobseeker-wrapper { vertical-align: top; padding-top: 15%; }
     
     /* Handle the widths */
-    .cover-container {
-        width: 100%; /* Must be percentage or pixels for horizontal alignment */
-    }
-    
-    .form-signin {
-        max-width: 330px;
-        padding: 15px;
-        margin: 10% auto;
-    }
-    
-    .wizard>.steps>ul>li{ 
-        width:100%;
-    }
-    
+    .cover-container { width: 100%; }    
+    .form-signin { max-width: 330px; padding: 15px; margin: 10% auto; }
+    .wizard>.steps>ul>li { width:100%; }    
 }
 
-/* Mobile & Screen Displays: 480px – 768px */
-@media only screen and (min-width: 30em) { 
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) { 
     .homepage-wrapper {
         background-image: url('../images/banner2_tablet.jpg');
         background-size: cover;
@@ -273,36 +283,27 @@ ol.linenums li{padding-left:12px;color:#bebec5;line-height:20px;text-shadow:0 1p
         -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
         box-shadow: inset 0 0 100px rgba(0,0,0,.5);
     }
-    
-    /* Start the vertical centering */
-    .site-wrapper-inner {
-        vertical-align: top;
-        padding-top: 10%;    
-    }
-    
+        
     /* About Us Page */
-    .aboutus-wrapper {
-        vertical-align: top;
-        padding-top: 10%;
-    }
+    .aboutus-wrapper { vertical-align: top; padding-top: 10%; }
+    
+    /* Contact Us Page */
+    .contactus-wrapper { vertical-align: top; padding-top: 10%; }
+    
+    /* Recruiter Login Page */
+    .recruiter-wrapper { vertical-align: top; padding-top: 10%; }
+    
+    /* JobSeeker Login Page */
+    .jobseeker-wrapper { vertical-align: top; padding-top: 10%; }
     
     /* Handle the widths */
-    .cover-container {
-        width: 100%; /* Must be percentage or pixels for horizontal alignment */
-    }
-    .form-signin {
-        max-width: 330px;
-        padding: 15px;
-        margin: 10% auto;
-    }
-    .wizard>.steps>ul>li{
-        width:25%;
-    }
-    
+    .cover-container { width: 100%; }
+    .form-signin { max-width: 330px; padding: 15px; margin: 10% auto; }
+    .wizard>.steps>ul>li{ width:25%; }    
 }
 
-/* Mobile & Bigger Screen Displays: 768px – 1279px */
-@media only screen and (min-width: 48em) { 
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) {
     /* Extra markup and styles for table-esque vertical and horizontal centering */
     .homepage-wrapper {
         background-image: url('../images/banner2.jpg');
@@ -314,28 +315,21 @@ ol.linenums li{padding-left:12px;color:#bebec5;line-height:20px;text-shadow:0 1p
         -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
         box-shadow: inset 0 0 100px rgba(0,0,0,.5);
     }
-    /* Start the vertical centering */
-    .site-wrapper-inner {
-        vertical-align: top;
-        padding-top: 6%;    
-    }
     
     /* About Us Page */
-    .aboutus-wrapper {
-        vertical-align: top;
-        padding-top: 6%;
-    }
+    .aboutus-wrapper { vertical-align: top; padding-top: 6%; }
+    
+    /* Contact Us Page */
+    .contactus-wrapper { vertical-align: top; padding-top: 6%; }
+    
+    /* Recruiter Login Page */
+    .recruiter-wrapper { vertical-align: top; padding-top: 6%; }
+    
+    /* JobSeeker Login Page */
+    .jobseeker-wrapper { vertical-align: top; padding-top: 6%; }
 }
-
-/* Large Displays: 1280px – 1440px */
-@media only screen and (min-width: 80em) { 
-    .cover-container {
-        width: 700px;
-    }
-}
-
-/* X-Large Displays: 1400px and up */
-@media only screen and (min-width: 90em) { 
+/* Large desktop */
+@media (min-width: 1200px) { 
     .cover-container {
         width: 700px;
     }

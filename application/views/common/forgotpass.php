@@ -1,3 +1,4 @@
+<?php $this->load->helper('language'); ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head>
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -938,10 +939,16 @@ a:hover{color:#30495c !important}.wrapper .logo div{color:#41637e}.wrapper .logo
                       
                         <table class="contents" style="border-collapse: collapse;border-spacing: 0;table-layout: fixed;width: 100%">
                           <tbody><tr>
-                            <td class="padded" style="padding: 0;vertical-align: top;padding-left: 32px;padding-right: 32px;word-break: break-word;word-wrap: break-word">
-                              
-            <p style="Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 21px;line-height: 32px;Margin-bottom: 32px;text-align: left">Thanks for your interest in Jobs on our Grab Talent portal and we really appreciate your support. We at Grab Talent always look forward to serve you better.</p><a href="http://grabtalent.ricemerchant.com/recruiter" role="button" style="color:#ff0000;text-decoration:none;font-weight:100;font-family:Helvetica,Arial,sans-serif;font-size:18px;text-align:center;padding:15px 45px"><font size="5px">Reset my Password</font></a><br /><br /><p style="Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 21px;line-height: 32px;Margin-bottom: 32px;text-align: center">You received this notification, because you have an account registered with Grab Talent&nbsp;</p>
-          
+                            <td class="padded" style="padding: 0;vertical-align: top;padding-left: 32px;padding-right: 32px;word-break: break-word;word-wrap: break-word">               
+                            <?php
+                                 if($this->lang->lang() == 'en') {
+                                    echo "<p style='Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 21px;line-height: 32px;Margin-bottom: 32px;text-align: left'>Thanks for being part of our Talent Pool and we really appreciate your support and always strive to serve you better.</p><a href='http://grabtalent.ricemerchant.com/' role='button' style='color:#ff0000;text-decoration:none;font-weight:100;font-family:Helvetica,Arial,sans-serif;font-size:18px;text-align:center;padding:15px 45px'><font size='5px'>Reset your password</font></a><br /><br /><p style='Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 21px;line-height: 32px;Margin-bottom: 32px;text-align: center'>Please click on the link below to reset your password</p>";
+                                 } else if($this->lang->lang() == 'fr') {
+                                    echo "<p style='Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 21px;line-height: 32px;Margin-bottom: 32px;text-align: left'>Merci de faire partie de notre pool de talents et nous apprécions votre soutien et de toujours chercher à mieux vous servir.</p><a href='http://grabtalent.ricemerchant.com/' role='button' style='color:#ff0000;text-decoration:none;font-weight:100;font-family:Helvetica,Arial,sans-serif;font-size:18px;text-align:center;padding:15px 45px'><font size='5px'>A Propos De Nous</font></a><br /><br /><p style='Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 21px;line-height: 32px;Margin-bottom: 32px;text-align: center'>S'il vous plaît cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe</p>";
+                                 } else if($this->lang->lang() == 'ch') {
+                                    echo "<p style='Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 21px;line-height: 32px;Margin-bottom: 32px;text-align: left'>&#24863;&#35874;&#24744;&#25104;&#20026;&#25105;&#20204;&#30340;&#20154;&#25165;&#24211;&#30340;&#19968;&#37096;&#20998;&#65292;&#25105;&#20204;&#30495;&#30340;&#24456;&#24863;&#35874;&#24744;&#30340;&#25903;&#25345;&#21644;&#19968;&#30452;&#21162;&#21147;&#20026;&#24744;&#25552;&#20379;&#26356;&#22909;&#12290;</p><a href='http://grabtalent.ricemerchant.com/' role='button' style='color:#ff0000;text-decoration:none;font-weight:100;font-family:Helvetica,Arial,sans-serif;font-size:18px;text-align:center;padding:15px 45px'><font size='5px'>&#37325;&#32622;&#23494;&#30721;</font></a><br /><br /><p style='Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 21px;line-height: 32px;Margin-bottom: 32px;text-align: center'>&#35831;&#28857;&#20987;&#20197;&#19979;&#38142;&#25509;&#37325;&#35774;&#23494;&#30721;</p>";
+                                 }                            
+                            ?>
                             </td>
                           </tr>
                         </tbody></table>

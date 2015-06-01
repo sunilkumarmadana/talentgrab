@@ -1,2 +1,0 @@
-# talentgrab
-Recruitment Website

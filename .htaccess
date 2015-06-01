@@ -5,7 +5,7 @@ RewriteEngine on
 
 # prevent access to .svn folders
 RewriteRule ^(.*/)?\.svn/ - [F,L]
-ErrorDocument 403 ":-)
 
 RewriteCond $1 !^(index\.php|images|css|js|user_guide)
 RewriteRule ^(.*)$ index.php/$1 [L]
+RedirectMatch 302 (.*)\index.php?$ /en/home

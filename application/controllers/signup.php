@@ -112,7 +112,7 @@ class Signup extends CI_Controller {
         } else {
             $this->session->set_flashdata('error_message', 'Your account was not created, please try again!');            
         }
-        redirect(base_url('candidate'));
+        redirect(https_url('candidate'));
     }
     
     private function _saveEmployments($cand_refIds, $email, $currCompany, $currPosition, $currCompanyloc, $curreAnnualSal) {

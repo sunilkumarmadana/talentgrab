@@ -71,6 +71,13 @@ class Candidate_dashboard extends CI_Controller {
         $this->db->update('candidate_signup', $data);
         if($this->db->trans_status() == '1') {
             echo "success";
+            $sess_array = array('username' => $this->session->userdata('logged_in'));
+            
+            $session_items = array('user_data' => '');
+            $this->session->unset_userdata($session_items);
+            
+            $candidateinfo = $this->login_database->read_user_information($sess_array,'candidate');
+            $this->session->set_userdata('user_data', $candidateinfo);
         } else {
             echo "failure";            
         }
@@ -96,6 +103,13 @@ class Candidate_dashboard extends CI_Controller {
                 $this->db->update('candidate_signup', $data);
                 if($this->db->trans_status() == '1') {
                     echo "success";
+                    $sess_array = array('username' => $this->session->userdata('logged_in'));
+                    
+                    $session_items = array('user_data' => '');
+                    $this->session->unset_userdata($session_items);
+                    
+                    $candidateinfo = $this->login_database->read_user_information($sess_array,'candidate');
+                    $this->session->set_userdata('user_data', $candidateinfo);
                 } else {
                     echo "failure";            
                 }

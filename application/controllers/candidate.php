@@ -6,7 +6,7 @@ class Candidate extends CI_Controller {
         parent::__construct();
 
         // Load form helper library
-        $this->load->helper('form');
+        $this->load->helper(array('form', 'url'));
         
         $this->load->helper('view_helper');
         
@@ -15,10 +15,14 @@ class Candidate extends CI_Controller {
         
         // Load session library
         $this->load->library('session');
-        $this->load->helper('language');        
+        
+        $this->load->helper('cookie');
+        $this->load->helper('language');
         $this->load->helper('url');
         
         $this->lang->load('common');
+        
+        $this->load->helper('download');
         
         // Load database
         $this->load->model('login_database');
@@ -46,71 +50,140 @@ class Candidate extends CI_Controller {
         $this->load->view('common/layout', $template);
 	}
     
+    // Candidate upload resume modal window
+    public function candidate_resumeupload() {
+        $this->load->view('candidate/candidate_resumeupload');
+	}
+    
+    public function candidate_resumedownload () {
+        $file_url = "./public/candidate/".$this->uri->segment(4);
+        header('Content-Type: application/octet-stream');
+        header("Content-Transfer-Encoding: Binary"); 
+        header("Content-disposition: attachment; filename=\"" . basename($file_url) . "\""); 
+        readfile($file_url);
+    }
+    
+    //Candidate upload resume process
+    public function candidate_resumeupdate(){
+        
+        $target_dir = "public/candidate/";
+        $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+        // Check if image file is a actual image or fake image
+        if(isset($_POST["submit"])) {
+            $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+            if($check !== false) {
+                echo "File is an image - " . $check["mime"] . ".";
+                $uploadOk = 1;
+            } else {
+                echo "File is not an image.";
+                $uploadOk = 0;
+            }
+        }
+        // Check if file already exists
+        if (file_exists($target_file)) {
+            echo "Sorry, file already exists.";
+            $uploadOk = 0;
+        }
+        // Check file size
+        if ($_FILES["fileToUpload"]["size"] > 500000) {
+            echo "Sorry, your file is too large.";
+            $uploadOk = 0;
+        }
+        // Allow certain file formats
+        if($imageFileType != "doc" && $imageFileType != "docx" && $imageFileType != "pdf"
+        && $imageFileType != "txt" ) {
+            echo "Sorry, only DOC, DOCX, PDF & TXT files are allowed.";
+            $uploadOk = 0;
+        }
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+        // if everything is ok, try to upload file
+        } else {
+            if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+                
+                // To initially check if the email is registered in the system.
+                $result = $this->login_database->candidate_resumeupdatecheck($this->input->post('candidate-profile-email')); 
+                if ($result > 0) {
+                    $data = array('resume_url' => basename($_FILES["fileToUpload"]["name"]));
+                    $this->db->where('candidate_email', $this->input->post('candidate-profile-email'));
+                    $this->db->update('candidate_signup', $data);
+                    if($this->db->trans_status() != '1') {
+                        echo "Sorry, there was an error uploading your file.";
+                    } else {
+                        // 2. Refresh session data
+                        $sess_array = array('username' => $this->session->userdata('logged_in'));
+                        $candidateinfo = $this->login_database->read_user_information($sess_array,'candidate');
+                        $this->session->set_userdata('user_data', $candidateinfo);
+                    }
+                } else {
+                    return false;
+                }
+                
+            } else {
+                echo "Sorry, there was an error uploading your file.";
+            }
+        }
+    }
+    
     // Validate and store registration data in database
-    public function register() {
+    public function register() {        
+        $head_params = array(
+            'title' => 'Candidate Registration | Grab Talent',
+            'description' => "Grab Talent is the best online recruitment portal",
+            'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
+        );
         
-        // Check validation for user input in SignUp form
-        $this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('confirmpassword', 'Confirm Password', 'trim|required|xss_clean');
-        
+        $template["head"] = $this->load->view('common/head', $head_params, true);
+        $template["header"] = $this->load->view('common/header', null, true);
+        $template["contents"] = $this->load->view('candidate/register', null, true);
+        $this->load->view('common/layout', $template);
+    }
+    
+    public function candidate_register(){
+                
         $passWd = $this->input->post('password');
         $confrmpassWd = $this->input->post('confirmpassword');
         
         if( $passWd != $confrmpassWd) {
-            $this->session->set_flashdata('error_message', 'Passwords do not match, Please try again!');
-            redirect( base_url('candidate/register') );
+            echo "error; Your Passwords do not match, please try again";
         } else {
-            if ($this->form_validation->run() == FALSE) {
-                $head_params = array(
-                    'title' => 'Candidate Registration | Grab Talent',
-                    'description' => "Grab Talent is the best online recruitment portal",
-                    'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
-                );
-                
-                $template["head"] = $this->load->view('common/head', $head_params, true);
-                $template["header"] = $this->load->view('common/header', null, true);
-                $template["contents"] = $this->load->view('candidate/register', null, true);
-                $this->load->view('common/layout', $template);
-            } else {
-                
+            $this->session->set_userdata('emailaddress', $this->input->post('email'));
+            $this->load->model('Grabtalent_signup_model');
+            $code = Grabtalent_signup_model::generate_unique_code();
+            $logindata = array(
+                'candidate_code' => $code,
+                'candidate_email' => $this->input->post('email'),
+                'candidate_password' => md5($this->input->post('password'))
+            );
+            $result = $this->login_database->registration_insert($logindata);
+            if ($result == TRUE) {
                 $this->session->set_userdata('emailaddress', $this->input->post('email'));
-                $this->load->model('Grabtalent_signup_model');
-                $code = Grabtalent_signup_model::generate_unique_code();
-                $logindata = array(
-                    'candidate_code' => $code,
-                    'candidate_email' => $this->input->post('email'),
-                    'candidate_password' => md5($this->input->post('password'))
-                );
-                $result = $this->login_database->registration_insert($logindata);
-                if ($result == TRUE) {
-                    $this->session->set_userdata('emailaddress', $this->input->post('email'));
-                    redirect( base_url('signup') );                
-                } else {
-                    $this->session->set_flashdata('error_message', 'Username / Email Address already exist!');
-                    redirect( base_url('candidate/register') );
-                }
-            }            
+                echo "success;". https_url('signup');                
+            } else {
+                $this->session->set_flashdata('error_message', '');
+                echo "error; Username / Email Address already exist!, please try again";
+            }         
         }
-
-    }
+            
+    }        
         
     // Check for user login process
     public function candidate_login() {
                 
-        $this->form_validation->set_rules('emailaddress', 'Email Address', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
-    
-        if ($this->form_validation->run() == FALSE) {
-            echo "Please enter valid Username or Password";
-        } else {
-            $data = array(
-                'emailaddress' => $this->input->post('emailaddress'),
-                'password' => $this->input->post('password')
-            );
-            $result = $this->login_database->candidatelogin($data);
-            
-            if($result == TRUE){                
+        $data = array(
+            'emailaddress' => $this->input->post('emailaddress'),
+            'password' => $this->input->post('password')
+        );
+        $result = $this->login_database->candidatelogin($data);
+        
+        if($result == TRUE){
+            // To double-confirm if the candidate completed his signup process.
+            $result = $this->login_database->candidate_resumeupdatecheck($this->input->post('emailaddress'));
+            if($result > 0) {
                 // Add user data in session
                 $this->session->set_userdata('logged_in', $this->input->post('emailaddress'));
                 
@@ -119,10 +192,13 @@ class Candidate extends CI_Controller {
                 );                        
                 $result = $this->login_database->read_user_information($sess_array, 'candidate');
                 $this->session->set_userdata('user_data', $result);
-                echo "success";
+                echo "success;You will be redirected shortly";    
             } else {
-                echo "Invalid Username or Password";
+                echo "error;You have not completed the sign-up process, please register again with us.";
+                $condition = "candidate_email =" . "'" . $this->input->post('emailaddress') . "'";
             }
+        } else {
+            echo "error;Invalid Username or Password";
         }
     }
     
@@ -131,7 +207,7 @@ class Candidate extends CI_Controller {
         if($this->session->userdata('logged_in') != null || $this->session->userdata('logged_in') != "") {
         
             $head_params = array(
-                'title' => 'Employer Portal | Grab Talent',
+                'title' => 'Job Seeker Portal | Grab Talent',
                 'description' => "Grab Talent is the best online recruitment portal",
                 'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
             );
@@ -149,7 +225,7 @@ class Candidate extends CI_Controller {
         if($this->session->userdata('logged_in') != null || $this->session->userdata('logged_in') != "") {
         
             $head_params = array(
-                'title' => 'Employer Portal | Grab Talent',
+                'title' => 'Job Seeker Portal | Grab Talent',
                 'description' => "Grab Talent is the best online recruitment portal",
                 'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
             );
@@ -162,106 +238,35 @@ class Candidate extends CI_Controller {
         }
     }
     
-    // Candidate profile submit.
-    public function profile_update() {
-        
-        if($this->session->userdata('logged_in') != null || $this->session->userdata('logged_in') != "") {
-            
-            $condition = "candidate_email =" . "'" . $this->input->post('profile-email') . "'";
-            $this->db->select('*');
-            $this->db->from('candidate_signup');
-            $this->db->where($condition);            
-            $query = $this->db->get();
-            foreach ($query->result_array() as $row){
-                $old_phone = $row['candidate_phonenumber'];
-                $old_briefDesc = $row['brief_description'];
-                $old_resumeUrl = $row['resume_url'];
-            }
-            if($_FILES["candid_resume"]["error"] == 0) {
-                $postResumename=basename($_FILES["candid_resume"]["name"]);
-                $fileSize=$_FILES["candid_resume"]["size"]/1024;
-                $fileType=$_FILES["candid_resume"]["type"];
-                
-                if($fileType=="application/msword"){
-                    if($fileSize<=2048000) {
-                        $extension = explode(".", $postResumename);
-                        $filename = $this->input->post('profile-email')."_Resume.".$extension[1];
-                        
-                        $data = array(
-                           'candidate_phonenumber' => $this->input->post('inputPhonenumber'),
-                           'brief_description' => $this->input->post('inputbriefDesc'),
-                           'resume_url' => $filename
-                        );
-                        
-                        $this->db->where('candidate_email', $this->input->post('profile-email'));
-                        $this->db->update('candidate_signup', $data);
-                        if($this->db->trans_status() == '1') {                            
-                            if ( !$this->_do_upload($filename)) {
-                                echo "Internal Server Error occured, please try again";
-                    		} else {
-                                echo "Your Resume file has been updated!";
-                    		}
-                        } else {
-                            $this->session->set_flashdata('error_message', 'Something went wrong, try again later!');
-                        }       
-                    } else {
-                        $this->session->set_flashdata('error_message', 'File size too big, Upload Failed');
-                    }
-                } else {
-                    $this->session->set_flashdata('error_message', 'File type not accepted, Upload Failed');
-                }                
-            } else {
-                $filename = $old_resumeUrl;
-                $data = array(
-                   'candidate_phonenumber' => $this->input->post('inputPhonenumber'),
-                   'brief_description' => $this->input->post('inputbriefDesc'),
-                   'resume_url' => $filename
-                );
-                
-                $this->db->where('candidate_email', $this->input->post('profile-email'));
-                $this->db->update('candidate_signup', $data);
-                if($this->db->trans_status() == '1') {
-                    $this->session->set_flashdata('success_message', 'Your profile information has been updated!');
-                } else {
-                    $this->session->set_flashdata('error_message', 'Something went wrong, try again later!');
-                }
-            }
-            
-            $this->session->unset_userdata('user_data');
-            $sess_array = array(
-                'username' => $this->input->post('profile-email')
-            );
-            $result = $this->login_database->read_user_information($sess_array, 'candidate');
-            $this->session->set_userdata('user_data', $result);
-            redirect( base_url('/candidate/profile') );
+    // Recruiter profile update.
+    public function profile_update() {        
+        // 1. Updated Profile data
+        $candidate_profupd = array(
+            'candidate_firstname' => $this->input->post('inputCandFirstname'),
+            'candidate_lastname' => $this->input->post('inputCandLastname'),
+            'candidate_phonenumber' => $this->input->post('inputPhonenumber'),
+            'brief_description' => $this->input->post('inputbriefDesc')                                             
+        );
+        $result = $this->login_database->profile_update($candidate_profupd,$this->input->post('profile-email'));
+        if($result == TRUE) {
+            echo "success;Your Profile has been updated successfully!!";
         } else {
-            redirect(base_url('candidate'));
+            echo "failure;Profile was not updated, please try again!";
         }
+        
+        // 2. Refresh session data
+        $sess_array = array('username' => $this->session->userdata('logged_in'));
+        $candidateinfo = $this->login_database->read_user_information($sess_array,'candidate');
+        $this->session->set_userdata('user_data', $candidateinfo);
     }
     
-    public function _do_upload($flname) {
-        
-        $config['upload_path'] = 'public/candidate/resume';
-		$config['allowed_types']    = 'doc|docx|pdf|txt|text';
-		$config['max_size']	= '2048';
-        $config['file_name'] = $flname;
-
-		$this->load->library('upload', $config);
-        
-		if ( !$this->upload->do_upload()) {
-            echo "error";
-		} else {
-            echo "success";
-		}
-	}
-    
     public function job() {
-        $jobnumber = $this->uri->segment(3);
+        $jobnumber = $this->uri->segment(4);
         $job_detail = $this->login_database->read_job_information($jobnumber);
         $this->session->set_userdata('job_detail', $job_detail);
 
         $head_params = array(
-            'title' => 'Employer Portal | Grab Talent',
+            'title' => 'Job Seeker Portal | Grab Talent',
             'description' => "Grab Talent is the best online recruitment portal",
             'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
         );
@@ -270,6 +275,12 @@ class Candidate extends CI_Controller {
         $template["header"] = $this->load->view('common/candidate/header', null, true);
         $template["contents"] = $this->load->view('candidate/job', null, true);
         $this->load->view('common/candidate/layout', $template);
+    }
+    
+    // Logout from admin page
+    public function logout() {  
+        // Removing session data
+        redirect( base_url('candidate') );
     }
     
     public function registercandidate_application() {
@@ -289,23 +300,20 @@ class Candidate extends CI_Controller {
 
 	}
     
-    // Logout from admin page
-    public function logout() {  
-        // Removing session data
-        redirect( base_url('candidate') );
-    }
-    
     // To save / register jobs into job table.
     private function _saveApplication($jobNumber, $CandEmail) {
 
         $ApplicationModels = array();
 
         $this->db->trans_start();
-
+        
+        $data_email = array('email' => $CandEmail);
+        
         // setup password
         $ApplicationModel = new grabtalent_application_model();
-        $ApplicationModel->row['candidate_appln_job_id']         = $jobNumber;
+        $ApplicationModel->row['candidate_appln_ref_id']         = $this->login_database->fetch_cand_refId($data_email);
         $ApplicationModel->row['candidate_email']                = $CandEmail;
+        $ApplicationModel->row['candidate_appln_job_id']         = $jobNumber;
         $ApplicationModel->row['candidate_applied_date']         = date('Y-m-d h:m:s');
         $ApplicationModel->save();
         array_push($ApplicationModels, $ApplicationModel);
@@ -351,10 +359,10 @@ class Candidate extends CI_Controller {
             $this->email->subject('GrabTalent : Reset Password');
             $this->email->message($message);
             if($this->email->send()) {
-                echo "success";
+                echo "success; Please check your email for the reset password link!";
             } else {
                 //show_error($this->email->print_debugger());
-                echo "failure";
+                echo "failure; Please try again as the email was not sent";
             }
         } else {
             echo "This email is not registered with us!";

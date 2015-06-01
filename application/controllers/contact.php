@@ -11,51 +11,53 @@ class Contact extends CI_Controller {
         $this->lang->load('common');
     }
        
-    public function index() {
+    public function index() {        
+        $head_params = array(
+            'title' => 'Contact Us | Grab Talent',
+            'description' => "Grab Talent is the best online recruitment portal",
+            'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
+        );
         
-        $this->form_validation->set_rules('firstname',   'First Name',         'trim|required|max_length[50]|xss_clean');
-        $this->form_validation->set_rules('lastname',    'Last Name',          'trim|required|max_length[50]|xss_clean');
-        $this->form_validation->set_rules('email',       'Email',              'trim|required|max_length[255]|valid_email|xss_clean');
-        $this->form_validation->set_rules('phonenumber', 'Phone number',       'trim|regex_match[/^[\-0-9]+$/]|xss_clean');
-        $this->form_validation->set_rules('reason',      'Reason for contact', 'trim|required|max_length[255]|xss_clean');
-        $this->form_validation->set_rules('message',     'Message',            'trim|required|xss_clean');
-
-        if ($this->form_validation->run()) {
-            $this->load->library('email');
-
-            $subject = "Message from [{$this->input->post('firstname')} {$this->input->post('lastname')}]";
-            $message = <<<EOF
-            Please contact the following person regarding to below matter.
-            
-            First Name: {$this->input->post('firstname')}
-            Last Name: {$this->input->post('lastname')}
-            Email: {$this->input->post('email')}
-            Phone No: {$this->input->post('phonenumber')}
-            Reason for contact: {$this->input->post('reason')}
-            Message: {$this->input->post('message')}
+        $template["head"] = $this->load->view('common/head', $head_params, true);
+        $template["header"] = $this->load->view('common/header', null, true);
+        $template["contents"] = $this->load->view('contact/index', null, true);
+        $this->load->view('common/layout', $template);
+    }
+    
+    public function contact_form() {
+        
+        $subject = "Message from [{$this->input->post('firstname')} {$this->input->post('lastname')}]";
+        $message = <<<EOF
+        Please contact the following person regarding to below matter.<br /><br />
+        
+        First Name: {$this->input->post('firstname')}<br />
+        Last Name: {$this->input->post('lastname')}<br />
+        Email: {$this->input->post('email')}<br />
+        Phone No: {$this->input->post('phonenumber')}<br />
+        Reason for contact: {$this->input->post('reason')}<br />
+        Message: {$this->input->post('message')}
 EOF;
 
-            $this->email->from(RGF_MAIL_FROM);
-            $this->email->to(RGF_MAIL_TO);
-            $this->email->subject($subject);
-            $this->email->message($message);
-            $this->email->send();
-            
-            redirect(base_url('contact/complete'));
-
+        $config = array(
+            'protocol' => 'smtp',
+            'smtp_host' => 'ssl://ns3-999.999servers.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'sunil.madana.kumar@ricemerchant.com', // change it to yours
+            'smtp_pass' => 'Sunil2012Swathi', // change it to yours
+            'mailtype' => 'html',
+            'charset'=>'utf-8',
+            'wordwrap' => TRUE            
+        );
+        $this->load->library('email', $config);
+        $this->email->set_newline("\r\n");
+        $this->email->from('sunil.madana.kumar@ricemerchant.com','Grab Talent'); // change it to yours
+        $this->email->to($this->input->post("email"));// change it to yours
+        $this->email->subject($subject);
+        $this->email->message($message);
+        if($this->email->send()) {
+            echo "success; Thanks for the message, we will be in touch with you soon";
         } else {
-            
-            $head_params = array(
-                'title' => 'Contact Us | Grab Talent',
-                'description' => "Grab Talent is the best online recruitment portal",
-                'keywords' => 'jobs singapore, recruitment agency, GT, Grab Talent',
-            );
-            
-            $template["head"] = $this->load->view('common/head', $head_params, true);
-            $template["header"] = $this->load->view('common/header', null, true);
-            $template["contents"] = $this->load->view('contact/index', null, true);
-            //$template["footer"] = $this->load->view('common/footer', null, true);
-            $this->load->view('common/layout', $template);
+            echo "failure; Your email was not sent, lease try again.";
         }
     }
 
@@ -69,7 +71,6 @@ EOF;
         $template["head"] = $this->load->view('common/head', $head_params, true);
         $template["header"] = $this->load->view('common/header', null, true);
         $template["contents"] = $this->load->view('contact/complete', null, true);
-        //$template["footer"] = $this->load->view('common/footer', null, true);
         $this->load->view('common/layout', $template);
     }
     

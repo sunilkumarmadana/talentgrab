@@ -12,13 +12,16 @@
     <link rel="icon" href="/images/favicon.ico">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/bootstrap-tagsinput.css" rel="stylesheet">
-    <link href="/css/page.css" rel="stylesheet">    
+    <link href="/css/page.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="/js/jquery-1.11.2.js"></script>
     <script src="/js/ie-emulation-modes-warning.js"></script>    
-    <!-- <script src="/js/bootstrap.js"></script> -->
+    <script src="/js/bootstrap-wysiwyg.js"></script>
+    <script src="/js/jquery.hotkeys.js"></script>
+    <script src="/js/google-code-prettify.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/bootstrap-tagsinput.js"></script>
     <script src="/js/jquery.steps.js"></script>
